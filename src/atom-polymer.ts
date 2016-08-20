@@ -16,6 +16,7 @@ class AtomPolymer {
   atomPolymerView: AtomPolymerView = null;
   modalPanel: AtomCore.Panel = null;
   subscriptions: CompositeDisposable = null;
+  linter: Linter = null;
 
   activate(state: ViewState) {
     console.log('atom-polymer was activated');
@@ -30,13 +31,34 @@ class AtomPolymer {
     // Register command that toggles this view
     this.subscriptions.add(atom.commands.add(
         'atom-workspace', {'atom-polymer:toggle': () => this.toggle()}));
+    this.linter = new Linter();
+
+    this.subscriptions.add(
+        atom.project.onDidChangePaths((projectPaths: string[]) => {
+          this.setProjectPaths(projectPaths);
+        }));
+    this.setProjectPaths(atom.project['getPaths']());
   };
 
   deactivate() {
     this.modalPanel['destroy']();
     this.subscriptions.dispose();
     this.atomPolymerView.destroy();
+    this.linter = null;
   };
+
+  setProjectPaths(projectPaths: string[]) {
+    if (projectPaths.length === 0) {
+      this.linter.configurationError =
+          'Polymer linter only works with projects.';
+    } else if (projectPaths.length > 1) {
+      this.linter.configurationError =
+          `Polymer linter only projects with exactly one root directory, this project has: ${JSON.stringify(projectPaths)}`;
+    } else {
+      this.linter.configurationError = null;
+      this.linter.rootDir = projectPaths[0];
+    }
+  }
 
   serialize() {
     return {atomPolymerViewState: this.atomPolymerView.serialize()};
@@ -50,26 +72,36 @@ class AtomPolymer {
   };
 
   provideLinter(): lint.Provider|lint.Provider[] {
-    console.log('atom-polymer was asked for a lint provider');
-    const provider: lint.Provider = {
-      name: 'Polymer Analyzer',
-      grammarScopes: [
-        'source.js', 'text.html', 'text.html.basic'
-      ],              // ['*'] will get it triggered regardless of grammar
-      scope: 'file',  // or 'project'
-      lintOnFly: true,
-      lint: async function(textEditor): Promise<lint.Message[]> {
-        console.log(`atom-polymer was asked to lint ${textEditor.getPath()}`);
-        return [{
-          type: 'Error',
-          text: 'Something went wrong',
-          range: [[0, 0], [0, 1]],
-          filePath: textEditor.getPath()
-        }];
-      }
-    };
-    return provider;
+    return this.linter;
   }
 };
+
+class Linter implements lint.Provider {
+  name = 'Polymer Analyzer';
+  grammarScopes = ['source.js', 'text.html', 'text.html.basic'];
+  scope: 'file' = 'file';
+  lintOnFly = true;
+  configurationError: string|null = null;
+  rootDir: string;
+
+  async lint(textEditor: AtomCore.IEditor): Promise<lint.Message[]> {
+    if (this.configurationError) {
+      return [{
+        type: 'Error',
+        text: this.configurationError,
+        range: [[0, 0], [0, 1]],
+        filePath: textEditor.getPath(),
+        severity: 'error'
+      }];
+    }
+    return [{
+      type: 'Info',
+      text: `All is well: ${this.rootDir}`,
+      range: [[0, 0], [1, 0]],
+      filePath: textEditor.getPath(),
+      severity: 'info'
+    }];
+  }
+}
 
 export default new AtomPolymer();
