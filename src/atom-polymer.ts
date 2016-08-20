@@ -2,9 +2,14 @@
 
 /// <reference path="../custom_typings/main.d.ts" />
 
+import * as path from 'path';
+
 import {AtomPolymerView, AtomPolymerViewState} from './atom-polymer-view';
 import {CompositeDisposable} from 'atom';
 import * as lint from 'atom-lint';
+import * as editorService from 'polymer-analyzer/lib/editor-service';
+import {FSUrlLoader} from 'polymer-analyzer/lib/url-loader/fs-url-loader';
+import {SourceRange} from 'polymer-analyzer/lib/ast/ast';
 
 console.log('atom-polymer was imported');
 
@@ -82,8 +87,17 @@ class Linter implements lint.Provider {
   scope: 'file' = 'file';
   lintOnFly = true;
   configurationError: string|null = null;
-  rootDir: string;
+  editorService: editorService.EditorService;
 
+  private _rootDir: string = null;
+  get rootDir() {
+    return this._rootDir;
+  }
+  set rootDir(dir: string) {
+    this._rootDir = dir;
+    this.editorService =
+        new editorService.EditorService({urlLoader: new FSUrlLoader(dir)});
+  }
   async lint(textEditor: AtomCore.IEditor): Promise<lint.Message[]> {
     if (this.configurationError) {
       return [{
@@ -94,14 +108,45 @@ class Linter implements lint.Provider {
         severity: 'error'
       }];
     }
-    return [{
-      type: 'Info',
-      text: `All is well: ${this.rootDir}`,
-      range: [[0, 0], [1, 0]],
-      filePath: textEditor.getPath(),
-      severity: 'info'
-    }];
+    const [projectPath, relativePath]: string[] =
+        atom.project['relativizePath'](textEditor.getPath());
+    await this.editorService.fileChanged(
+        relativePath, textEditor.getBuffer().cachedText);
+    const warnings = await this.editorService.getWarningsFor(relativePath);
+    return warnings.map(w => {
+      const {path: relPath, range} = convertSourceRange(w.sourceRange);
+      return <lint.Message>{
+        type: severityToMessageType(w.severity),
+        filePath: path.join(projectPath, relPath),
+        range: range,
+        text: w.message
+      };
+    });
   }
+}
+
+function severityToMessageType(severity: editorService.Severity): string {
+  switch (severity) {
+    case editorService.Severity.ERROR:
+      return 'Error';
+    case editorService.Severity.WARNING:
+      return 'Warning';
+    case editorService.Severity.INFO:
+      return 'Info';
+    default:
+      throw new Error(`Unknown severity received: ${severity}`);
+  }
+}
+
+function convertSourceRange(sourceRange: SourceRange):
+    {range: lint.Range, path: string} {
+  return {
+    path: sourceRange.file,
+    range: [
+      [sourceRange.start.line, sourceRange.start.column],
+      [sourceRange.end.line, sourceRange.end.column]
+    ]
+  };
 }
 
 export default new AtomPolymer();
