@@ -4,9 +4,6 @@
   "version": "0.0.0",
   "description": "A short description of your package",
   "keywords": [],
-  "activationCommands": {
-    "atom-workspace": "atom-polymer:toggle"
-  },
   "repository": "https://github.com/atom/atom-polymer",
   "license": "MIT",
   "engines": {
@@ -15,5 +12,12 @@
   "dependencies": {},
   "devDependencies": {
     "@types/atom": "0.0.32"
+  },
+  "providedServices": {
+    "linter": {
+      "versions": {
+        "1.0.0": "provideLinter"
+      }
+    }
   }
 }
