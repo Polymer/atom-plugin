@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "es6",
+        "moduleResolution": "node",
+        "isolatedModules": false,
+        "noImplicitAny": true,
+        // TODO: enable these
+        // "strictNullChecks": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "lib": ["es2017", "dom"],
+        "outDir": "./lib",
+        "sourceMap": true
+    },
+    "include": [
+        "src/**/*.ts",
+        "custom_typings/main.d.ts"
+    ]
+}
