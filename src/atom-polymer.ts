@@ -7,8 +7,8 @@ import * as path from 'path';
 import {AtomPolymerView, AtomPolymerViewState} from './atom-polymer-view';
 import {CompositeDisposable} from 'atom';
 import * as lint from 'atom-lint';
-import * as editorService from 'polymer-analyzer/lib/editor-service';
-import {FSUrlLoader} from 'polymer-analyzer/lib/url-loader/fs-url-loader';
+import {Severity} from 'polymer-analyzer/lib/editor-service';
+import {RemoteEditorService} from 'polymer-analyzer/lib/remote-editor-service';
 import {SourceRange} from 'polymer-analyzer/lib/ast/ast';
 
 console.log('atom-polymer was imported');
@@ -60,8 +60,12 @@ class AtomPolymer {
       this.linter.configurationError =
           `Polymer linter only projects with exactly one root directory, this project has: ${JSON.stringify(projectPaths)}`;
     } else {
+      const rootDir = projectPaths[0];
+      const editorService = new RemoteEditorService(rootDir);
+      this.subscriptions.add(editorService);
       this.linter.configurationError = null;
-      this.linter.rootDir = projectPaths[0];
+      this.linter.editorService = editorService;
+      this.linter.rootDir = rootDir;
     }
   }
 
@@ -87,17 +91,9 @@ class Linter implements lint.Provider {
   scope: 'file' = 'file';
   lintOnFly = true;
   configurationError: string|null = null;
-  editorService: editorService.EditorService;
+  editorService: RemoteEditorService;
+  rootDir: string = null;
 
-  private _rootDir: string = null;
-  get rootDir() {
-    return this._rootDir;
-  }
-  set rootDir(dir: string) {
-    this._rootDir = dir;
-    this.editorService =
-        new editorService.EditorService({urlLoader: new FSUrlLoader(dir)});
-  }
   async lint(textEditor: AtomCore.IEditor): Promise<lint.Message[]> {
     if (this.configurationError) {
       return [{
@@ -125,13 +121,13 @@ class Linter implements lint.Provider {
   }
 }
 
-function severityToMessageType(severity: editorService.Severity): string {
+function severityToMessageType(severity: Severity): string {
   switch (severity) {
-    case editorService.Severity.ERROR:
+    case Severity.ERROR:
       return 'Error';
-    case editorService.Severity.WARNING:
+    case Severity.WARNING:
       return 'Warning';
-    case editorService.Severity.INFO:
+    case Severity.INFO:
       return 'Info';
     default:
       throw new Error(`Unknown severity received: ${severity}`);
