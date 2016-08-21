@@ -4,39 +4,24 @@
 
 import * as path from 'path';
 
-import {AtomPolymerView, AtomPolymerViewState} from './atom-polymer-view';
 import {CompositeDisposable} from 'atom';
 import * as lint from 'atom-lint';
 import {Severity} from 'polymer-analyzer/lib/editor-service';
 import {RemoteEditorService} from 'polymer-analyzer/lib/remote-editor-service';
 import {SourceRange} from 'polymer-analyzer/lib/ast/ast';
+import * as autocomplete from 'atom-autocomplete-plus';
 
-console.log('atom-polymer was imported');
-
-interface ViewState {
-  atomPolymerViewState: AtomPolymerViewState;
-}
+interface ViewState {}
 
 class AtomPolymer {
-  atomPolymerView: AtomPolymerView = null;
-  modalPanel: AtomCore.Panel = null;
   subscriptions: CompositeDisposable = null;
-  linter: Linter = null;
+  linter: Linter = new Linter();
+  autocompleter: Autocompleter = new Autocompleter();
 
-  activate(state: ViewState) {
-    console.log('atom-polymer was activated');
-    this.atomPolymerView = new AtomPolymerView(state.atomPolymerViewState);
-    this.modalPanel = atom.workspace.addModalPanel(
-        {item: this.atomPolymerView.getElement(), visible: false});
-
+  activate(_: ViewState) {
     // Events subscribed to in atom's system can be easily cleaned up with a
     // CompositeDisposable
     this.subscriptions = new CompositeDisposable();
-
-    // Register command that toggles this view
-    this.subscriptions.add(atom.commands.add(
-        'atom-workspace', {'atom-polymer:toggle': () => this.toggle()}));
-    this.linter = new Linter();
 
     this.subscriptions.add(
         atom.project.onDidChangePaths((projectPaths: string[]) => {
@@ -46,10 +31,9 @@ class AtomPolymer {
   };
 
   deactivate() {
-    this.modalPanel['destroy']();
     this.subscriptions.dispose();
-    this.atomPolymerView.destroy();
     this.linter = null;
+    this.autocompleter = null;
   };
 
   setProjectPaths(projectPaths: string[]) {
@@ -69,19 +53,16 @@ class AtomPolymer {
     }
   }
 
-  serialize() {
-    return {atomPolymerViewState: this.atomPolymerView.serialize()};
-  };
-
-  toggle() {
-    console.log('AtomPolymer was toggled!');
-    return (
-        this.modalPanel.isVisible() ? this.modalPanel.hide() :
-                                      this.modalPanel.show());
+  serialize(): ViewState {
+    return {};
   };
 
   provideLinter(): lint.Provider|lint.Provider[] {
     return this.linter;
+  }
+
+  provideAutocompleter(): autocomplete.Provider|autocomplete.Provider[] {
+    return this.autocompleter;
   }
 };
 
@@ -118,6 +99,19 @@ class Linter implements lint.Provider {
         text: w.message
       };
     });
+  }
+}
+
+class Autocompleter implements autocomplete.Provider {
+  selector = '.text.html, .source.js';
+  priority = 1;
+
+  async getSuggestions(_options: autocomplete.SuggestionRequestOptions):
+      Promise<autocomplete.Suggestion[]> {
+    const suggestions: autocomplete.Suggestion[] = [];
+    suggestions.push({text: 'foobarbaz'});
+
+    return suggestions;
   }
 }
 
