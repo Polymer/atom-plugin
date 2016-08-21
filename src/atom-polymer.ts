@@ -17,6 +17,7 @@ class AtomPolymer {
   subscriptions: CompositeDisposable = null;
   linter: Linter = new Linter();
   autocompleter: Autocompleter = new Autocompleter();
+  editorService: RemoteEditorService;
 
   activate(_: ViewState) {
     // Events subscribed to in atom's system can be easily cleaned up with a
@@ -42,14 +43,18 @@ class AtomPolymer {
           'Polymer linter only works with projects.';
     } else if (projectPaths.length > 1) {
       this.linter.configurationError =
-          `Polymer linter only projects with exactly one root directory, this project has: ${JSON.stringify(projectPaths)}`;
+          `Polymer linter only works with projects with exactly one root ` +
+          `directory, this project has: ${JSON.stringify(projectPaths)}`;
     } else {
       const rootDir = projectPaths[0];
-      const editorService = new RemoteEditorService(rootDir);
-      this.subscriptions.add(editorService);
+      if (this.editorService) {
+        this.editorService.dispose();
+      }
+      this.editorService = new RemoteEditorService(rootDir);
+      this.subscriptions.add(this.editorService);
       this.linter.configurationError = null;
-      this.linter.editorService = editorService;
-      this.autocompleter.editorService = editorService;
+      this.linter.editorService = this.editorService;
+      this.autocompleter.editorService = this.editorService;
     }
   }
 
@@ -75,6 +80,17 @@ class Linter implements lint.Provider {
   editorService: RemoteEditorService;
 
   async lint(textEditor: AtomCore.IEditor): Promise<lint.Message[]> {
+    try {
+      return await this._lint(textEditor);
+    } catch (e) {
+      // Atom pops up huge loud error popups if we return a rejecting promise
+      // here, so better to just log and swallow.
+      console.error(e.stack || e.message || e);
+      return [];
+    }
+  }
+
+  private async _lint(textEditor: AtomCore.IEditor): Promise<lint.Message[]> {
     if (this.configurationError) {
       return [{
         type: 'Error',
@@ -86,8 +102,12 @@ class Linter implements lint.Provider {
     }
     const [projectPath, relativePath]: string[] =
         atom.project['relativizePath'](textEditor.getPath());
-    await this.editorService.fileChanged(
-        relativePath, textEditor.getBuffer().cachedText);
+    try {
+      await this.editorService.fileChanged(
+          relativePath, textEditor.getBuffer().cachedText);
+    } catch (e) {
+      /* swallow the erorr, let getWarningsFor() handle things */
+    }
     const warnings = await this.editorService.getWarningsFor(relativePath);
     return warnings.map(w => {
       const {path: relPath, range} = convertSourceRange(w.sourceRange);
@@ -108,9 +128,21 @@ class Autocompleter implements autocomplete.Provider {
 
   async getSuggestions(options: autocomplete.SuggestionRequestOptions):
       Promise<autocomplete.Suggestion[]> {
+    try {
+      return await this._getSuggestions(options);
+    } catch (e) {
+      // Atom pops up huge loud error popups so better to just log and swallow.
+      console.error(e.stack || e.message || e);
+      return [];
+    }
+  }
+
+  private async _getSuggestions(options: autocomplete.SuggestionRequestOptions):
+      Promise<autocomplete.Suggestion[]> {
     if (!this.editorService) {
       return [];
     }
+
     const position = {
       line: options.bufferPosition.row,
       column: options.bufferPosition.column

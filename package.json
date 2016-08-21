@@ -1,8 +1,8 @@
 {
   "name": "atom-polymer",
   "main": "./lib/atom-polymer",
-  "version": "0.0.0",
-  "description": "A short description of your package",
+  "version": "0.0.1",
+  "description": "Provides linting, autocompletion, and more for web components.",
   "keywords": [],
   "repository": "https://github.com/atom/atom-polymer",
   "license": "MIT",
