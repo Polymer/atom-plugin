@@ -47,7 +47,7 @@ declare module 'atom-autocomplete-plus' {
     /** The current TextEditor. */
     editor: AtomCore.IEditor;
     /** The position of the cursor */
-    bufferPosition: [number, number];
+    bufferPosition: {row: number, column: number};
     /** The scope descriptor for the current cursor position */
     scopeDescriptor: AtomCore.ScopeDescriptor;
     /**
@@ -62,7 +62,7 @@ declare module 'atom-autocomplete-plus' {
   }
   interface DidInsertionSuggestionOptions {
     editor: AtomCore.IEditor;
-    triggerPosition: [number, number];
+    triggerPosition: {row: number, column: number};
     suggestion: Suggestion;
   }
   type Suggestion = TextSuggestion | SnippetSuggestion;
@@ -107,7 +107,7 @@ declare module 'atom-autocomplete-plus' {
      * An indicator (e.g. function, variable) denoting the "kind" of suggestion
      * this represents
      */
-    rightLabel: string;
+    rightLabel?: string;
 
     /**
      * Use this instead of rightLabel if you want to use html for the right
@@ -142,13 +142,13 @@ declare module 'atom-autocomplete-plus' {
      */
     descriptionMoreLink?: string;
   }
-  interface TextSuggestion {
+  interface TextSuggestion extends BaseSuggestion {
     /**
      * The text which will be inserted into the editor, in place of the prefix
      */
     text: string;
   }
-  interface SnippetSuggestion {
+  interface SnippetSuggestion extends BaseSuggestion {
     /**
      * A snippet string. This will allow users to tab through function arguments
      * or other options. e.g. 'myFunction(${1:arg1}, ${2:arg2})'. See the

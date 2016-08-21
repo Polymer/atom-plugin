@@ -49,7 +49,7 @@ class AtomPolymer {
       this.subscriptions.add(editorService);
       this.linter.configurationError = null;
       this.linter.editorService = editorService;
-      this.linter.rootDir = rootDir;
+      this.autocompleter.editorService = editorService;
     }
   }
 
@@ -73,7 +73,6 @@ class Linter implements lint.Provider {
   lintOnFly = true;
   configurationError: string|null = null;
   editorService: RemoteEditorService;
-  rootDir: string = null;
 
   async lint(textEditor: AtomCore.IEditor): Promise<lint.Message[]> {
     if (this.configurationError) {
@@ -105,13 +104,71 @@ class Linter implements lint.Provider {
 class Autocompleter implements autocomplete.Provider {
   selector = '.text.html, .source.js';
   priority = 1;
+  editorService: RemoteEditorService;
 
-  async getSuggestions(_options: autocomplete.SuggestionRequestOptions):
+  async getSuggestions(options: autocomplete.SuggestionRequestOptions):
       Promise<autocomplete.Suggestion[]> {
-    const suggestions: autocomplete.Suggestion[] = [];
-    suggestions.push({text: 'foobarbaz'});
-
-    return suggestions;
+    if (!this.editorService) {
+      return [];
+    }
+    const position = {
+      line: options.bufferPosition.row,
+      column: options.bufferPosition.column
+    };
+    const relativePath: string =
+        atom.project['relativizePath'](options.editor.getPath())[1];
+    const completions = await this.editorService.getTypeaheadCompletionsFor(
+        relativePath, position);
+    console.log(completions);
+    if (!completions) {
+      return [];
+    }
+    if (completions.kind === 'resource-paths') {
+      return completions.paths.map((path) => {
+        const suggestion: autocomplete.TextSuggestion = {
+          text: path,
+          replacementPrefix: completions.prefix,
+          type: 'import'
+        };
+        return suggestion;
+      });
+    } else if (completions.kind === 'element-tags') {
+      // Could do something more clever here, and look for partial matches
+      // ordering by length of match.
+      const matchingElements = completions.elements.filter(
+          e => e.tagname.startsWith(options.prefix));
+      return matchingElements.map((element) => {
+        const suggestion: autocomplete.TextSuggestion = {
+          text: element.expandTo,
+          displayText: `<${element.tagname}>`,
+          description: element.description,
+          type: 'class',
+          replacementPrefix: `<${options.prefix}`
+        };
+        return suggestion;
+      });
+    } else if (completions.kind === 'attributes') {
+      return completions.attributes.map((attr) => {
+        let suggestion: autocomplete.Suggestion;
+        if (attr.type === 'boolean') {
+          suggestion = {text: attr.name};
+        } else {
+          suggestion = {
+            displayText: attr.name,
+            snippet: `${attr.name}="\${1:${attr.type}}"`
+          };
+        }
+        suggestion.type = 'property';
+        suggestion.description = attr.description;
+        if (attr.inheritedFrom) {
+          suggestion.rightLabel = `⊃ ${attr.inheritedFrom}`;
+        }
+        if (attr.type) {
+          suggestion.leftLabel = attr.type;
+        }
+        return suggestion;
+      });
+    }
   }
 }
 
