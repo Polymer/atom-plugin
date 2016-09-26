@@ -6,9 +6,9 @@ import * as path from 'path';
 
 import {CompositeDisposable} from 'atom';
 import * as lint from 'atom-lint';
-import {Severity} from 'polymer-analyzer/lib/editor-service';
-import {RemoteEditorService} from 'polymer-analyzer/lib/remote-editor-service';
-import {SourceRange} from 'polymer-analyzer/lib/ast/ast';
+import {Severity} from 'polymer-analyzer/lib/warning/warning';
+import {RemoteEditorService} from 'polymer-analyzer/lib/editor-service/remote-editor-service';
+import {SourceRange} from 'polymer-analyzer/lib/model/model';
 import * as autocomplete from 'atom-autocomplete-plus';
 
 interface ViewState {}
@@ -108,7 +108,7 @@ class Linter implements lint.Provider {
     } catch (e) {
       /* swallow the erorr, let getWarningsFor() handle things */
     }
-    const warnings = await this.editorService.getWarningsFor(relativePath);
+    const warnings = await this.editorService.getWarningsForFile(relativePath);
     return warnings.map(w => {
       const {path: relPath, range} = convertSourceRange(w.sourceRange);
       return <lint.Message>{
@@ -149,22 +149,14 @@ class Autocompleter implements autocomplete.Provider {
     };
     const relativePath: string =
         atom.project['relativizePath'](options.editor.getPath())[1];
-    const completions = await this.editorService.getTypeaheadCompletionsFor(
-        relativePath, position);
+    const completions =
+        await this.editorService.getTypeaheadCompletionsAtPosition(
+            relativePath, position);
     console.log(completions);
     if (!completions) {
       return [];
     }
-    if (completions.kind === 'resource-paths') {
-      return completions.paths.map((path) => {
-        const suggestion: autocomplete.TextSuggestion = {
-          text: path,
-          replacementPrefix: completions.prefix,
-          type: 'import'
-        };
-        return suggestion;
-      });
-    } else if (completions.kind === 'element-tags') {
+    if (completions.kind === 'element-tags') {
       // Could do something more clever here, and look for partial matches
       // ordering by length of match.
       const matchingElements = completions.elements.filter(
@@ -200,7 +192,16 @@ class Autocompleter implements autocomplete.Provider {
         }
         return suggestion;
       });
-    }
+    } /* else if (completions.kind === 'resource-paths') {
+      return completions.paths.map((path) => {
+        const suggestion: autocomplete.TextSuggestion = {
+          text: path,
+          replacementPrefix: completions.prefix,
+          type: 'import'
+        };
+        return suggestion;
+      });
+    } */
   }
 }
 
