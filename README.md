@@ -14,6 +14,7 @@ Features:
     git clone git@github.com:Polymer/atom-plugin.git
     cd atom-plugin
     npm install
+    apm install linter # optional, for red squiggles under errors
     apm link ./
     # Run the "Window: reload" command in atom (or restart it).
 
