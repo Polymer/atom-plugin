@@ -27,3 +27,9 @@ When atom-polymer is released it will be a one step install from the atom packag
     rm -rf node_modules # lol
     npm install
     # Run the "Window: reload" command in atom (or restart it).
+
+### Try it out on a simple example project
+
+    cd atom-plugin/example_project
+    bower install
+    atom ./
