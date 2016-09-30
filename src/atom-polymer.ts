@@ -7,7 +7,7 @@ import * as path from 'path';
 import {CompositeDisposable} from 'atom';
 import * as lint from 'atom-lint';
 import {Severity} from 'polymer-analyzer/lib/warning/warning';
-import {RemoteEditorService} from 'polymer-editor-service/lib/remote-editor-service';
+import {RemoteEditorService} from 'polymer-analyzer/lib/editor-service/remote-editor-service';
 import {SourceRange} from 'polymer-analyzer/lib/model/model';
 import * as autocomplete from 'atom-autocomplete-plus';
 
