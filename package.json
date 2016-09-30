@@ -5,7 +5,7 @@
   "description": "Provides linting, autocompletion, and more for web components.",
   "keywords": [],
   "repository": "https://github.com/atom/atom-polymer",
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },

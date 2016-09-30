@@ -39,11 +39,10 @@ class AtomPolymer {
 
   setProjectPaths(projectPaths: string[]) {
     if (projectPaths.length === 0) {
-      this.linter.configurationError =
-          'Polymer linter only works with projects.';
+      this.linter.configurationError = 'atom-polymer only works with projects.';
     } else if (projectPaths.length > 1) {
       this.linter.configurationError =
-          `Polymer linter only works with projects with exactly one root ` +
+          `atom-polymer only works with projects with exactly one root ` +
           `directory, this project has: ${JSON.stringify(projectPaths)}`;
     } else {
       const rootDir = projectPaths[0];
@@ -214,7 +213,8 @@ function severityToMessageType(severity: Severity): string {
     case Severity.INFO:
       return 'Info';
     default:
-      throw new Error(`Unknown severity received: ${severity}`);
+      const never: never = severity;
+      throw new Error(`Unknown severity received: ${never}`);
   }
 }
 
