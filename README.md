@@ -1,6 +1,6 @@
 # atom-polymer
 
-Unlocks all of the power of the [Polymer Analyzer](https://github.com/Polymer/polymer-analyzer) in your editor.
+Unlocks all of the power of the [Polymer Analyzer](https://github.com/Polymer/polymer-analyzer) in your editor. See the [Polymer Editor Service](https://github.com/Polymer/polymer-editor-service) for more info, including links to other editor plugins.
 
 Features:
 
@@ -10,6 +10,8 @@ Features:
  * (coming soon!) jump to definition support for custom elements and attributes
 
 ## Installation
+
+When atom-polymer is released it will be a one step install from the atom package manager. While it's in private dogfooding you'll need to clone it and install it manually.
 
     git clone git@github.com:Polymer/atom-plugin.git
     cd atom-plugin
