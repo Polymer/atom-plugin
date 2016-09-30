@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "@types/node": "^6.0.41",
-    "polymer-analyzer": "^2.0.0-alpha.8"
+    "polymer-analyzer": "^2.0.0-alpha.9",
+    "polymer-editor-service": "git+ssh://git@github.com/Polymer/polymer-editor-service.git"
   },
   "devDependencies": {
     "@types/atom": "0.0.32",
