@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@types/node": "^6.0.41",
-    "polymer-analyzer": "^2.0.0-alpha.9"
+    "polymer-analyzer": "^2.0.0-alpha.15"
   },
   "devDependencies": {
     "@types/atom": "0.0.32",
