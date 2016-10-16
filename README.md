@@ -1,6 +1,6 @@
 # atom-polymer
 
-Unlocks all of the power of the [Polymer Analyzer](https://github.com/Polymer/polymer-analyzer) in your editor. See the [Polymer Editor Service](https://github.com/Polymer/polymer-editor-service) for more info, including links to other editor plugins.
+Unlocks all of the power of the [Polymer Analyzer] in [Atom]. See the [Polymer Editor Service] for more info, including links to other editor plugins.
 
 Features:
 
@@ -33,3 +33,7 @@ When atom-polymer is released it will be a one step install from the atom packag
     cd atom-plugin/example_project
     bower install
     atom ./
+    
+[Polymer Analyzer]: https://github.com/Polymer/polymer-analyzer
+[Atom]: https://atom.io/
+[polymer editor service]: https://github.com/Polymer/polymer-editor-service
