@@ -1,10 +1,10 @@
 {
-  "name": "atom-polymer",
+  "name": "polymer-ide",
   "main": "./lib/atom-polymer",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Provides linting, autocompletion, and more for web components.",
   "keywords": [],
-  "repository": "https://github.com/atom/atom-polymer",
+  "repository": "https://github.com/polymer/atom-plugin",
   "license": "BSD-3-Clause",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
