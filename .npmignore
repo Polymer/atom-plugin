@@ -1,8 +1,0 @@
-node_modules
-bower_components
-.DS_Store
-.idea
-npm-debug.log
-
-# The raw typescript source
-src/
