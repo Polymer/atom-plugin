@@ -10,7 +10,6 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "scripts": {
-    "postinstall": "tsc"
   },
   "dependencies": {
     "@types/node": "^6.0.41",
