@@ -1,5 +1,3 @@
-# atom-polymer
-
 Unlocks all of the power of the [Polymer Analyzer] in [Atom]. See the [Polymer Editor Service] for more info, including links to other editor plugins.
 
 Features:

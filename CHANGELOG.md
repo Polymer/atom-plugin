@@ -1,3 +1,6 @@
+## 0.1.3 - Improved documentation
+* Improved documentation
+
 ## 0.1.2 - First working version!
 * Features linting through `linter` and autocompletions through Atom's built-in autocompletions plugin.
 
