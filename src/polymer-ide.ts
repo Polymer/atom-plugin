@@ -33,8 +33,9 @@ class PolymerIde {
 
   deactivate() {
     this.subscriptions.dispose();
-    this.linter = null;
-    this.autocompleter = null;
+    this.editorService = null;
+    this.linter = new Linter();
+    this.autocompleter = new Autocompleter();
   };
 
   setProjectPaths(projectPaths: string[]) {

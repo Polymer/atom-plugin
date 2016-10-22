@@ -1,3 +1,7 @@
+## Unreleased
+
+* [bugfix] Fix an issue with the lifecycles of certain internal objects. #16
+
 ## 0.1.3 - Improved documentation
 * Improved documentation
 
