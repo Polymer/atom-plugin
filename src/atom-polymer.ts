@@ -13,7 +13,7 @@ import * as autocomplete from 'atom-autocomplete-plus';
 
 interface ViewState {}
 
-class AtomPolymer {
+class PolymerIde {
   subscriptions: CompositeDisposable = null;
   linter: Linter = new Linter();
   autocompleter: Autocompleter = new Autocompleter();
@@ -39,10 +39,10 @@ class AtomPolymer {
 
   setProjectPaths(projectPaths: string[]) {
     if (projectPaths.length === 0) {
-      this.linter.configurationError = 'atom-polymer only works with projects.';
+      this.linter.configurationError = 'polymer-ide only works with projects.';
     } else if (projectPaths.length > 1) {
       this.linter.configurationError =
-          `atom-polymer only works with projects with exactly one root ` +
+          `polymer-ide only works with projects with exactly one root ` +
           `directory, this project has: ${JSON.stringify(projectPaths)}`;
     } else {
       const rootDir = projectPaths[0];
@@ -71,7 +71,7 @@ class AtomPolymer {
 };
 
 class Linter implements lint.Provider {
-  name = 'Polymer Analyzer';
+  name = 'polymer-ide';
   grammarScopes = ['source.js', 'text.html', 'text.html.basic'];
   scope: 'file' = 'file';
   lintOnFly = true;
@@ -229,4 +229,4 @@ function convertSourceRange(sourceRange: SourceRange):
   };
 }
 
-export default new AtomPolymer();
+export default new PolymerIde();
