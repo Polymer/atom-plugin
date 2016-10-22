@@ -1,15 +1,18 @@
 'use babel';
 
 /// <reference path="../custom_typings/main.d.ts" />
+/// <reference path="atom/index.d.ts" />
+/// <reference path="marked/index.d.ts" />
 
 import * as path from 'path';
 
-import {CompositeDisposable} from 'atom';
+import {CompositeDisposable, AtomMouseEvent} from 'atom';
 import * as lint from 'atom-lint';
 import {Severity} from 'polymer-analyzer/lib/warning/warning';
 import {RemoteEditorService} from 'polymer-analyzer/lib/editor-service/remote-editor-service';
 import {SourceRange} from 'polymer-analyzer/lib/model/model';
 import * as autocomplete from 'atom-autocomplete-plus';
+import * as marked from 'marked';
 
 interface ViewState {}
 
@@ -18,6 +21,7 @@ class PolymerIde {
   linter: Linter = null;
   autocompleter: Autocompleter = null;
   editorService: RemoteEditorService;
+  tooltipManager: TooltipManager;
 
   activate(_: ViewState) {
     // Initialize.
@@ -33,6 +37,8 @@ class PolymerIde {
           this.setProjectPaths(projectPaths);
         }));
     this.setProjectPaths(atom.project['getPaths']());
+    this.tooltipManager = new TooltipManager(this.editorService);
+    this.tooltipManager.subscribe(this.subscriptions);
   };
 
   deactivate() {
@@ -41,6 +47,7 @@ class PolymerIde {
     this.editorService = null;
     this.linter = null;
     this.autocompleter = null;
+    this.tooltipManager.removeTooltip();
   };
 
   setProjectPaths(projectPaths: string[]) {
@@ -61,7 +68,7 @@ class PolymerIde {
       this.linter.editorService = this.editorService;
       this.autocompleter.editorService = this.editorService;
     }
-  }
+  };
 
   serialize(): ViewState {
     return {};
@@ -69,12 +76,133 @@ class PolymerIde {
 
   provideLinter(): lint.Provider|lint.Provider[] {
     return this.linter;
-  }
+  };
 
   provideAutocompleter(): autocomplete.Provider|autocomplete.Provider[] {
     return this.autocompleter;
-  }
+  };
 };
+
+class TooltipManager {
+  textEditor: AtomCore.IEditor;
+  tooltipMarker: AtomCore.IDisplayBufferMarker;
+  tooltipElement: HTMLElement = null;
+  documentationElement: HTMLElement = null;
+  editorService: RemoteEditorService;
+  editorElements: Array<HTMLElement> = [];
+
+  constructor(editorService: RemoteEditorService) {
+    this.editorService = editorService;
+  };
+
+  subscribe(subscriptions: CompositeDisposable) {
+    subscriptions.add(atom.workspace.observePanes((pane: AtomCore.IPane) => {
+      this.update();
+      subscriptions.add(pane.onDidChangeActiveItem(() => {
+        this.update();
+      }));
+    }));
+  };
+
+  update() {
+    this.removeTooltip();
+    this.textEditor = atom.workspace.getActiveTextEditor();
+    this.addMouseEventListener();
+  }
+
+  addMouseEventListener() {
+    const textEditorElement = atom.views.getView(this.textEditor);
+    if (!textEditorElement) {
+      return;
+    }
+    if (this.editorElements.indexOf(textEditorElement) > -1) {
+      return;
+    }
+    this.editorElements.push(textEditorElement);
+    let timer: number;
+    textEditorElement.addEventListener('mousemove', (event: AtomMouseEvent) => {
+      window.clearTimeout(timer);
+      this.removeTooltip();
+      timer = window.setTimeout(() => this.calculatePositions(event, textEditorElement), 100);
+    });
+  };
+
+  calculatePositions(event: AtomMouseEvent, textEditorElement: any) {
+    // The text editor could have been closed before the timeout was fired
+    if (!textEditorElement || !textEditorElement.component) {
+      return;
+    }
+    const reportedCursorPosition = textEditorElement.component.screenPositionForMouseEvent(event);
+    const currentCursorPixelPosition = textEditorElement.component.pixelPositionForMouseEvent(event);
+    const expectedPixelPosition = textEditorElement.pixelPositionForScreenPosition(reportedCursorPosition);
+
+    const nearColumn = Math.abs(currentCursorPixelPosition.left - expectedPixelPosition.left) < 20;
+    const nearRow = Math.abs(currentCursorPixelPosition.top - expectedPixelPosition.top) < 20;
+
+    if (nearColumn && nearRow) {
+      this.updateTooltip(this.textEditor.bufferPositionForScreenPosition(reportedCursorPosition), event);
+    }
+  }
+
+  async updateTooltip(point: {row: number, column: number}, event: AtomMouseEvent) {
+    this.removeTooltip();
+
+    if (!(this.editorService && this.textEditor)) {
+      return;
+    }
+    const relativePath: string =
+      atom.project['relativizePath'](this.textEditor.getPath())[1];
+    let documentation: string;
+    try {
+      documentation = await this.editorService.getDocumentationAtPosition(relativePath, {line: point.row, column: point.column});
+      if (!documentation) {
+        return;
+      }
+    } catch (e) {
+      // The analyzer was not able to parse the file
+      return;
+    }
+
+    const marker = this.textEditor.markBufferRange([point, point]);
+    const div = this.getOrCreateTooltipElement();
+    div.style.left = event.left;
+    div.style.top = event.top;
+    this.documentationElement.innerHTML = marked.parse(documentation);
+    this.textEditor.decorateMarker(marker, {
+      type: 'overlay',
+      item: div
+    });
+    this.tooltipMarker = marker;
+  };
+
+  getOrCreateTooltipElement(): HTMLElement {
+    if (!this.tooltipElement) {
+      const div = document.createElement('div');
+      div.classList.add('tooltip');
+      div.classList.add('in');
+      div.classList.add('bottom');
+      const content = document.createElement('div');
+
+      content.classList.add('tooltip-inner');
+      content.classList.add('polymer-tooltip-documentation');
+      div.appendChild(content);
+
+      this.tooltipElement = div;
+      this.documentationElement = content;
+    } else {
+      this.tooltipElement.style.display = 'block';
+    }
+    return this.tooltipElement;
+  };
+
+  removeTooltip() {
+    if (this.tooltipMarker) {
+      this.tooltipMarker.destroy();
+      this.tooltipMarker = null;
+      this.tooltipElement.style.display = 'none';
+    }
+  };
+}
 
 class Linter implements lint.Provider {
   name = 'polymer-ide';
@@ -93,7 +221,7 @@ class Linter implements lint.Provider {
       console.error(e.stack || e.message || e);
       return [];
     }
-  }
+  };
 
   private async _lint(textEditor: AtomCore.IEditor): Promise<lint.Message[]> {
     if (this.configurationError) {

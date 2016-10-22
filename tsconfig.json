@@ -5,19 +5,22 @@
         "moduleResolution": "node",
         "isolatedModules": false,
         "noImplicitAny": true,
-        // TODO: enable these
-        // "strictNullChecks": true,
+        "strictNullChecks": false,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "removeComments": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
         "lib": ["es2017", "dom"],
-        "outDir": "./lib",
+        "outDir": "lib/",
         "sourceMap": true
     },
+    "compileOnSave": false,
     "include": [
         "src/**/*.ts",
         "custom_typings/main.d.ts"
+    ],
+    "exclude": [
+        "node_modules"
     ]
 }

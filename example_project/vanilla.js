@@ -1,5 +1,11 @@
 /**
- * Hello from VanillaElement's documentation!
+ * Hello from VanillaElement's documentation! **This is a bold statement** asdfasdfasdfasdfasdf
+ *
+ * ```html
+ * <vanilla-elem></vanilla-elem>
+ * ```
+ *
+ * __asdfasdfasdfasdf__
  */
 class VanillaElement extends HTMLElement {
   static get observedAttributes() {

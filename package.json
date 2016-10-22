@@ -12,10 +12,12 @@
   "scripts": {},
   "dependencies": {
     "@types/node": "^6.0.41",
+    "marked": "^0.3.6",
     "polymer-analyzer": "^2.0.0-alpha.15"
   },
   "devDependencies": {
     "@types/atom": "0.0.32",
+    "@types/marked": "0.0.28",
     "tslint": "^3.15.1",
     "typescript": "^2.0.3"
   },
