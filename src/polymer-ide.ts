@@ -15,11 +15,15 @@ interface ViewState {}
 
 class PolymerIde {
   subscriptions: CompositeDisposable = null;
-  linter: Linter = new Linter();
-  autocompleter: Autocompleter = new Autocompleter();
+  linter: Linter = null;
+  autocompleter: Autocompleter = null;
   editorService: RemoteEditorService;
 
   activate(_: ViewState) {
+    // Initialize.
+    this.linter = new Linter();
+    this.autocompleter = new Autocompleter();
+
     // Events subscribed to in atom's system can be easily cleaned up with a
     // CompositeDisposable
     this.subscriptions = new CompositeDisposable();
@@ -33,9 +37,10 @@ class PolymerIde {
 
   deactivate() {
     this.subscriptions.dispose();
+    this.subscriptions = null;
     this.editorService = null;
-    this.linter = new Linter();
-    this.autocompleter = new Autocompleter();
+    this.linter = null;
+    this.autocompleter = null;
   };
 
   setProjectPaths(projectPaths: string[]) {
