@@ -183,8 +183,8 @@ class TooltipManager {
       div.classList.add('bottom');
       const content = document.createElement('div');
 
+      content.id = 'polymer-tooltip-documentation';
       content.classList.add('tooltip-inner');
-      content.classList.add('polymer-tooltip-documentation');
       div.appendChild(content);
 
       this.tooltipElement = div;
