@@ -3,11 +3,6 @@ declare module 'atom' {
     add(d: AtomCore.Disposable): void;
     dispose(): void;
   }
-  export interface AtomMouseEvent extends MouseEvent {
-    left: string;
-    top: string;
-  }
-
 }
 
 declare namespace AtomCore {
