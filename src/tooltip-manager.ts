@@ -13,7 +13,7 @@ class TooltipManager {
   documentationElement: HTMLElement = null;
   editorService: RemoteEditorService;
   editorElements: Array<HTMLElement> = [];
-  cursorOutsideTooltip: boolean = true;
+  oldCursorsPosition: {x: number, y: number};
 
   constructor(editorService: RemoteEditorService) {
     this.editorService = editorService;
@@ -46,8 +46,17 @@ class TooltipManager {
     let timer: number;
     textEditorElement.addEventListener('mousemove', (event: MouseEvent) => {
       window.clearTimeout(timer);
-      if (this.cursorOutsideTooltip) {
+      if (this.tooltipMarker
+          // You are going too far up
+          && (this.oldCursorsPosition.y - event.y  > 25
+          // You are going too far left or right
+          || (Math.abs(this.oldCursorsPosition.x - event.x) > 25
+              // but you are not going down inside the tooltip.
+              && this.oldCursorsPosition.y - event.y > -25))
+        ) {
         this.removeTooltip();
+      }
+      if (!this.tooltipMarker) {
         timer = window.setTimeout(() => this.calculatePositions(event, textEditorElement), 100);
       }
     });
@@ -67,6 +76,7 @@ class TooltipManager {
 
     if (nearColumn && nearRow) {
       this.updateTooltip(this.textEditor.bufferPositionForScreenPosition(reportedCursorPosition));
+      this.oldCursorsPosition = {x: event.x, y: event.y};
     }
   }
 
@@ -97,7 +107,6 @@ class TooltipManager {
       item: div
     });
     this.tooltipMarker = marker;
-    this.cursorOutsideTooltip = false;
   };
 
   getOrCreateTooltipElement(): HTMLElement {
@@ -114,7 +123,7 @@ class TooltipManager {
       div.appendChild(content);
 
       div.addEventListener('mouseleave', () => {
-        this.cursorOutsideTooltip = true;
+        this.removeTooltip();
       });
 
       this.tooltipElement = div;
