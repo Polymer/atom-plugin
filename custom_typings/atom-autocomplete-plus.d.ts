@@ -137,6 +137,12 @@ declare module 'atom-autocomplete-plus' {
     description?: string;
 
     /**
+     * A markdown-string summary or short description of the suggestion. When
+     * specified, it will be displayed at the bottom of the suggestions list.
+     */
+    descriptionMarkdown?: string;
+
+    /**
      * A url to the documentation or more information about this suggestion.
      * When specified, a More.. link will be displayed in the description area.
      */

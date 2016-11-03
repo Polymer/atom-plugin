@@ -173,6 +173,7 @@ class Autocompleter implements autocomplete.Provider {
           text: element.expandTo,
           displayText: `<${element.tagname}>`,
           description: element.description,
+          descriptionMarkdown: element.description,
           type: 'class',
           replacementPrefix: `<${options.prefix}`
         };

@@ -2,9 +2,10 @@
 
 ### Added
 * Added support for documentation tooltips when you hover your mouse over a custom element or attribute!
+* Display markdown in descriptions for autocompletion results. #10
 
 ### Fixed
-* [bugfix] Fix an issue with the lifecycles of certain internal objects. #16
+* Fix an issue with the lifecycles of certain internal objects. #16
 
 ## 0.1.3 - Improved documentation
 * Improved documentation
