@@ -3,6 +3,10 @@ declare module 'atom' {
     add(d: AtomCore.Disposable): void;
     dispose(): void;
   }
+  export class Disposable {
+		constructor(disposalAction:any)
+		dispose():void
+	}
 }
 
 declare namespace AtomCore {
@@ -14,6 +18,11 @@ declare namespace AtomCore {
   export interface IPane {
     // https://atom.io/docs/api/v1.6.0/Pane#instance-onDidChangeActiveItem
     onDidChangeActiveItem(callback: (paneItem: any)=>void): Disposable;
+  }
+
+  export interface IProject {
+    relativizePath(path: string): string[];
+    getPaths(): string[];
   }
 
   interface DecorationParams {

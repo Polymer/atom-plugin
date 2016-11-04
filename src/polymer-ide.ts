@@ -1,7 +1,6 @@
 'use babel';
 
 /// <reference path="../custom_typings/main.d.ts" />
-/// <reference path="atom/index.d.ts" />
 
 import * as path from 'path';
 
@@ -20,7 +19,6 @@ class PolymerIde {
   linter: Linter = null;
   autocompleter: Autocompleter = null;
   editorService: RemoteEditorService;
-  tooltipManager: TooltipManager;
 
   activate(_: ViewState) {
     // Initialize.
@@ -35,9 +33,8 @@ class PolymerIde {
         atom.project.onDidChangePaths((projectPaths: string[]) => {
           this.setProjectPaths(projectPaths);
         }));
-    this.setProjectPaths(atom.project['getPaths']());
-    this.tooltipManager = new TooltipManager(this.editorService);
-    this.tooltipManager.subscribe(this.subscriptions);
+    this.setProjectPaths(atom.project.getPaths());
+    this.subscriptions.add(new TooltipManager(this.editorService));
   };
 
   deactivate() {
@@ -46,7 +43,6 @@ class PolymerIde {
     this.editorService = null;
     this.linter = null;
     this.autocompleter = null;
-    this.tooltipManager.removeTooltip();
   };
 
   setProjectPaths(projectPaths: string[]) {
@@ -112,7 +108,7 @@ class Linter implements lint.Provider {
       }];
     }
     const [projectPath, relativePath]: string[] =
-        atom.project['relativizePath'](textEditor.getPath());
+        atom.project.relativizePath(textEditor.getPath());
     try {
       await this.editorService.fileChanged(
           relativePath, textEditor.getBuffer().cachedText);
@@ -159,7 +155,7 @@ class Autocompleter implements autocomplete.Provider {
       column: options.bufferPosition.column
     };
     const relativePath: string =
-        atom.project['relativizePath'](options.editor.getPath())[1];
+        atom.project.relativizePath(options.editor.getPath())[1];
     const completions =
         await this.editorService.getTypeaheadCompletionsAtPosition(
             relativePath, position);
