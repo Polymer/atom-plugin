@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+* Added support for documentation tooltips when you hover your mouse over a custom element or attribute!
+
+### Fixed
 * [bugfix] Fix an issue with the lifecycles of certain internal objects. #16
 
 ## 0.1.3 - Improved documentation

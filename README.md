@@ -5,6 +5,7 @@ Features:
  * typeahead completions for imported elements, with documentation
  * typeahead completions for element attributes, with documentation
  * inline errors (squiggle underlines)
+ * documentation for elements and attributes when hovering over them with your mouse
 
 ## Installation
 
