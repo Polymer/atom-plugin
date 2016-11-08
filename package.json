@@ -9,7 +9,10 @@
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
-  "scripts": {},
+  "scripts": {
+    "preversion": "tsc && git add lib/ -f",
+    "postversion": "git rm -r lib/ && git commit -m \"Automatic removal of lib folder after release commit.\" && tsc"
+  },
   "dependencies": {
     "@types/node": "^6.0.41",
     "marked": "^0.3.6",
