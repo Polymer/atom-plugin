@@ -3,7 +3,7 @@
 /// <reference path="../custom_typings/atom.d.ts" />
 
 import {CompositeDisposable, Disposable} from 'atom';
-import {RemoteEditorService} from 'polymer-analyzer/lib/editor-service/remote-editor-service';
+import {RemoteEditorService} from 'polymer-editor-service/lib/remote-editor-service';
 import * as marked from 'marked';
 
 class TooltipManager extends Disposable {
