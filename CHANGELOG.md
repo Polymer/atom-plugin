@@ -2,6 +2,10 @@
 
 <!-- New PRs should document their user-visible changes here, in the Unreleased section. -->
 
+### Changed
+
+* Autocompletions will now have a smart tabbing order snippet depending on properties. #1
+
 ## 0.2.0 - 2016-11-11 - Tooltips and Markdown
 
 ### Added
