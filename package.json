@@ -1,7 +1,7 @@
 {
   "name": "polymer-ide",
   "main": "./lib/polymer-ide",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Provides linting, autocompletion, and more for web components.",
   "keywords": [],
   "repository": "https://github.com/polymer/atom-plugin",
@@ -16,7 +16,7 @@
   "dependencies": {
     "@types/node": "^6.0.41",
     "marked": "^0.3.6",
-    "polymer-analyzer": "=2.0.0-alpha.16",
+    "polymer-analyzer": "=2.0.0-alpha.17",
     "polymer-editor-service": "^1.1.0"
   },
   "devDependencies": {
