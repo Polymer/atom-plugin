@@ -169,8 +169,8 @@ class Autocompleter implements autocomplete.Provider {
       const matchingElements = completions.elements.filter(
           e => e.tagname.startsWith(options.prefix));
       return matchingElements.map((element) => {
-        const suggestion: autocomplete.TextSuggestion = {
-          text: element.expandTo,
+        const suggestion: autocomplete.SnippetSuggestion = {
+          snippet: element.expandToSnippet,
           displayText: `<${element.tagname}>`,
           description: element.description,
           descriptionMarkdown: element.description,

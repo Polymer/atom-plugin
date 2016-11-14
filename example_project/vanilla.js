@@ -18,4 +18,7 @@ class VanillaElement extends HTMLElement {
   }
 }
 
+class VanillElementWithoutProperties extends HTMLElement {}
+
 customElements.define('vanilla-elem', VanillaElement);
+customElements.define('vanilla-elem-without-properties', VanillElementWithoutProperties);
