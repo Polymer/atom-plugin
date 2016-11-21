@@ -1,3 +1,5 @@
+'use babel';
+
 /**
  * @license
  * Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
@@ -11,7 +13,7 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-'use babel';
+
 
 /// <reference path="../custom_typings/main.d.ts" />
 

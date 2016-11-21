@@ -1,3 +1,5 @@
+'use babel';
+
 /**
  * @license
  * Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
@@ -11,6 +13,8 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
+
+
 import * as autocomplete from 'atom-autocomplete-plus';
 import {RemoteEditorService} from 'polymer-editor-service/lib/remote-editor-service';
 
