@@ -2,9 +2,11 @@
 
 <!-- New PRs should document their user-visible changes here, in the Unreleased section. -->
 
+## 0.2.2 - 2016-11-21 - Slots in autocompletions
+
 ### Changed
 
-* Autocompletions will now have a smart tabbing order snippet depending on slots.
+* Element autocompletions will now have a smart tabbing order snippet depending on shadow dom slots.
 
 ## 0.2.1 - 2016-11-14 - Cursor positioning in autocompletions
 
