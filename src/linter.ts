@@ -13,8 +13,6 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-
-
 import * as path from 'path';
 import * as lint from 'atom-lint';
 import {RemoteEditorService} from 'polymer-editor-service/lib/remote-editor-service';
@@ -46,13 +44,12 @@ function convertSourceRange(sourceRange: SourceRange):
   };
 }
 
-class Linter implements lint.Provider {
-  name = 'polymer-ide';
-  grammarScopes = ['source.js', 'text.html', 'text.html.basic'];
-  scope: 'file' = 'file';
-  lintOnFly = true;
-  configurationError: string|null = null;
+class Linter {
   editorService: RemoteEditorService;
+
+  constructor(editorService: RemoteEditorService) {
+    this.editorService = editorService;
+  };
 
   async lint(textEditor: AtomCore.IEditor): Promise<lint.Message[]> {
     try {
@@ -66,15 +63,6 @@ class Linter implements lint.Provider {
   };
 
   private async _lint(textEditor: AtomCore.IEditor): Promise<lint.Message[]> {
-    if (this.configurationError) {
-      return [{
-        type: 'Error',
-        text: this.configurationError,
-        range: [[0, 0], [0, 1]],
-        filePath: textEditor.getPath(),
-        severity: 'error'
-      }];
-    }
     const [projectPath, relativePath]: string[] =
         atom.project.relativizePath(textEditor.getPath());
     try {

@@ -18,10 +18,12 @@
 import * as autocomplete from 'atom-autocomplete-plus';
 import {RemoteEditorService} from 'polymer-editor-service/lib/remote-editor-service';
 
-class Autocompleter implements autocomplete.Provider {
-  selector = '.text.html, .source.js';
-  priority = 1;
+class Autocompleter {
   editorService: RemoteEditorService;
+
+  constructor(editorService: RemoteEditorService) {
+    this.editorService = editorService;
+  };
 
   async getSuggestions(options: autocomplete.SuggestionRequestOptions):
       Promise<autocomplete.Suggestion[]> {
