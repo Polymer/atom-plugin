@@ -68,10 +68,28 @@ class Autocompleter implements autocomplete.Provider {
         };
         return suggestion;
       });
-    } else if (completions.kind === 'attributes') {
-      const matchingAttributes = completions.attributes.filter(
-          e => e.name.startsWith(options.prefix));
-      return matchingAttributes.map((attr) => {
+    }
+
+    if (completions.kind === 'attribute-values') {
+      return completions.attributes.map(attr => {
+        let suggestion: autocomplete.Suggestion;
+        suggestion = {text: attr.autocompletion};
+        suggestion.type = 'value';
+        suggestion.description = attr.description;
+        if (attr.inheritedFrom) {
+          suggestion.rightLabel = `⊃ ${attr.inheritedFrom}`;
+        }
+        if (attr.type) {
+          suggestion.leftLabel = attr.type;
+        }
+        return suggestion;
+      });
+    }
+
+    if (completions.kind === 'attributes') {
+      return completions.attributes.filter(
+          e => e.name.startsWith(options.prefix))
+          .map((attr) => {
         let suggestion: autocomplete.Suggestion;
         if (attr.type === 'boolean') {
           suggestion = {text: attr.name};

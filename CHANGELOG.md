@@ -1,6 +1,8 @@
 ## Unreleased
 
 <!-- New PRs should document their user-visible changes here, in the Unreleased section. -->
+### Added
+* Added autcompletion for attribute values based on property information.
 
 ## 0.3.0 - 2017-03-20 - Linter and Polymer 2.0
 
