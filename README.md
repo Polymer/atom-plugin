@@ -20,6 +20,26 @@ Features:
     bower install
     atom ./
 
+### Contributing
+
+    git clone https://github.com/Polymer/atom-plugin
+    cd atom-plugin/
+    yarn
+    # Register this package only for development
+    apm link -d
+    # Run Atom in development mode
+    atom -d .
+
+It is advisable to link the [Polymer Analyzer] and [Polymer Editor Service] during development:
+
+    cd folder/of/analyzer
+    yarn link
+    cd folder/of/editor/service
+    yarn link
+    cd folder/of/atom-plugin
+    yarn link polymer-analyzer
+    yarn link polymer-editor-service
+
 [Polymer Analyzer]: https://github.com/Polymer/polymer-analyzer
 [Atom]: https://atom.io/
 [polymer editor service]: https://github.com/Polymer/polymer-editor-service
