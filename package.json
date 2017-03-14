@@ -23,6 +23,7 @@
   "devDependencies": {
     "@types/atom": "0.0.32",
     "@types/marked": "0.0.28",
+    "temp": "^0.8.3",
     "tslint": "^3.15.1",
     "typescript": "^2.0.3"
   },
