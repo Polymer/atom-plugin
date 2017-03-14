@@ -16,8 +16,8 @@
   "dependencies": {
     "@types/node": "^6.0.41",
     "marked": "^0.3.6",
-    "polymer-analyzer": "=2.0.0-alpha.18",
-    "polymer-editor-service": "^1.1.1"
+    "polymer-analyzer": "=2.0.0-alpha.30",
+    "polymer-editor-service": "=1.3.2"
   },
   "devDependencies": {
     "@types/atom": "0.0.32",
