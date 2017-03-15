@@ -10,6 +10,7 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "scripts": {
+    "build": "tsc",
     "preversion": "tsc && git add lib/ -f",
     "postversion": "git rm -r lib/ && git commit -m \"Automatic removal of lib folder after release commit.\" && tsc",
     "test": "tsc # TODO: more here"
