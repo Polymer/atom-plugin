@@ -1,6 +1,8 @@
 'use babel';
 
 import PolymerIde from '../lib/polymer-ide';
+import Linter from '../lib/linter';
+import Autocompleter from '../lib/auto-completer';
 import temp from 'temp';
 
 temp.track();
@@ -14,6 +16,26 @@ describe('PolymerIde', () => {
   beforeEach(() => {
     waitsForPromise(() =>
       atom.packages.activatePackage('polymer-ide'));
+  });
+
+  describe('provideLinter', () => {
+    it('should return the linter', () => {
+      const instance = new Linter();
+      PolymerIde.linter = instance;
+
+      expect(PolymerIde.provideLinter())
+        .toBe(instance);
+    });
+  });
+
+  describe('provideAutocompleter', () => {
+    it('should return the autocompleter', () => {
+      const instance = new Autocompleter();
+      PolymerIde.autocompleter = instance;
+
+      expect(PolymerIde.provideAutocompleter())
+        .toBe(instance);
+    });
   });
 
   describe('activate', () => {
