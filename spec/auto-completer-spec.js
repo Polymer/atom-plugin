@@ -83,7 +83,7 @@ describe('Autocompleter', () => {
             description: '',
             descriptionMarkdown: '',
             type: 'class',
-            replacementPrefix: '<t'
+            replacementPrefix: '<te'
           });
         }));
     });
