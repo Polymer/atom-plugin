@@ -43,6 +43,7 @@ describe('Linter', () => {
     });
 
     it('should log an exception if any uncaught', () => {
+      spyOn(console, 'error');
       spyOn(provider.editorService, 'getWarningsForFile')
         .andThrow({
           message: 'foo'
@@ -56,14 +57,17 @@ describe('Linter', () => {
     });
 
     it('should return warnings if any', () => {
+      const badPath = path.join(projectPath, 'does-not-exist.html');
+
       waitsForPromise(() =>
         provider.lint(editor).then(warnings => {
           expect(warnings.length).toBe(1);
           expect(warnings[0]).toEqual({
             type: 'Error',
             filePath: filePath,
-            range: [[0, 0], [1, 1]],
-            text: 'foo error'
+            range: [[2, 26], [2, 49]],
+            text: `Unable to load import: ENOENT: no such file or` +
+              ` directory, open '${badPath}'`
           });
         }));
     });
