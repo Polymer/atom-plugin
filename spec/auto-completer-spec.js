@@ -92,6 +92,7 @@ describe('Autocompleter', () => {
       it('should suggest matching attributes', () => {
         editor.setCursorBufferPosition([23, 0]);
         editor.insertText('<test-element f');
+        editor.setCursorBufferPosition([23, 14]);
 
         waitsForPromise(() =>
           getCompletions().then(result => {
@@ -109,7 +110,7 @@ describe('Autocompleter', () => {
         editor.setCursorBufferPosition([23, 0]);
         editor.insertText('<test-element b');
 
-        waitsforPromise(() =>
+        waitsForPromise(() =>
           getCompletions().then(result => {
             expect(result.length).toBe(1);
             expect(result[0]).toEqual({
