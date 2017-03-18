@@ -91,8 +91,7 @@ describe('Autocompleter', () => {
     describe('attributes', () => {
       it('should suggest matching attributes', () => {
         editor.setCursorBufferPosition([23, 0]);
-        editor.insertText('<test-element f');
-        editor.setCursorBufferPosition([23, 14]);
+        editor.insertText('<test-element fo');
 
         waitsForPromise(() =>
           getCompletions().then(result => {
@@ -108,7 +107,7 @@ describe('Autocompleter', () => {
 
       it('should produce text suggestions for bools', () => {
         editor.setCursorBufferPosition([23, 0]);
-        editor.insertText('<test-element b');
+        editor.insertText('<test-element ba');
 
         waitsForPromise(() =>
           getCompletions().then(result => {
