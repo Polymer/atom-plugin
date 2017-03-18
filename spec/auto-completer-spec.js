@@ -71,7 +71,7 @@ describe('Autocompleter', () => {
     });
 
     it('should suggest matching elements', () => {
-      editor.setCursorBufferPosition([20, 0]);
+      editor.setCursorBufferPosition([23, 0]);
       editor.insertText('<te');
 
       waitsForPromise(() =>
@@ -80,8 +80,8 @@ describe('Autocompleter', () => {
           expect(result[0]).toEqual({
             snippet: '<test-element $1></test-element>$0',
             displayText: '<test-element>',
-            description: '',
-            descriptionMarkdown: '',
+            description: 'test description',
+            descriptionMarkdown: 'test description',
             type: 'class',
             replacementPrefix: '<te'
           });
