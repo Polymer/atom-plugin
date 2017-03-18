@@ -93,7 +93,7 @@ describe('Autocompleter', () => {
         editor.setCursorBufferPosition([23, 0]);
         editor.insertText('<test-element f');
 
-        waitsforPromise(() =>
+        waitsForPromise(() =>
           getCompletions().then(result => {
             expect(result.length).toBe(1);
             expect(result[0]).toEqual({
