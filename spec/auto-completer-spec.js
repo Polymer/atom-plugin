@@ -73,18 +73,17 @@ describe('Autocompleter', () => {
     it('should suggest matching elements', () => {
       editor.setCursorBufferPosition([20, 0]);
       editor.insertText('<te');
-      editor.setCursorBufferPosition([20, 2]);
 
       waitsForPromise(() =>
         getCompletions().then(result => {
           expect(result.length).toBe(1);
           expect(result[0]).toEqual({
-            snippet: 'test-element',
+            snippet: '<test-element $1></test-element>$0',
             displayText: '<test-element>',
             description: '',
             descriptionMarkdown: '',
             type: 'class',
-            replacementPrefix: '<test'
+            replacementPrefix: '<t'
           });
         }));
     });
