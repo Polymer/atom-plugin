@@ -89,13 +89,40 @@ describe('Autocompleter', () => {
     });
 
     describe('attributes', () => {
-      it('should suggest matching attributes');
+      it('should suggest matching attributes', () => {
+        editor.setCursorBufferPosition([23, 0]);
+        editor.insertText('<test-element f');
 
-      it('should produce text suggestions for bools');
+        waitsforPromise(() =>
+          getCompletions().then(result => {
+            expect(result.length).toBe(1);
+            expect(result[0]).toEqual({
+              text: 'foo',
+              type: 'property',
+              description: 'foo description',
+              leftLabel: 'String'
+            });
+          }));
+      });
+
+      it('should produce text suggestions for bools', () => {
+        editor.setCursorBufferPosition([23, 0]);
+        editor.insertText('<test-element b');
+
+        waitsforPromise(() =>
+          getCompletions().then(result => {
+            expect(result.length).toBe(1);
+            expect(result[0]).toEqual({
+              displayText: 'bar',
+              snippet: 'bar=${1:Boolean}',
+              type: 'property',
+              description: 'bar description',
+              leftLabel: 'Boolean'
+            });
+          }));
+      });
 
       it('should display attribute inheritance');
-
-      it('should display attribute type');
     });
   });
 });
