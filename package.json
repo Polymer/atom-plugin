@@ -11,7 +11,8 @@
   },
   "scripts": {
     "preversion": "tsc && git add lib/ -f",
-    "postversion": "git rm -r lib/ && git commit -m \"Automatic removal of lib folder after release commit.\" && tsc"
+    "postversion": "git rm -r lib/ && git commit -m \"Automatic removal of lib folder after release commit.\" && tsc",
+    "test": "tsc # TODO: more here"
   },
   "dependencies": {
     "@types/node": "^6.0.41",
