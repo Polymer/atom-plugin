@@ -18,8 +18,7 @@
 import * as path from 'path';
 import * as lint from 'atom-lint';
 import {RemoteEditorService} from 'polymer-editor-service/lib/remote-editor-service';
-import {Severity} from 'polymer-analyzer/lib/warning/warning';
-import {SourceRange} from 'polymer-analyzer/lib/model/model';
+import {Severity, SourceRange} from 'polymer-analyzer';
 
 function severityToMessageType(severity: Severity): string {
   switch (severity) {

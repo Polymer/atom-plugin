@@ -2,6 +2,11 @@
 
 <!-- New PRs should document their user-visible changes here, in the Unreleased section. -->
 
+## 0.3.0 - 2017-03-20 - Linter and Polymer 2.0
+
+* Get many new kinds of warnings from [the new linter](https://github.com/Polymer/polymer-linter) when you have a polymer.json file that configures lint rules.
+* Many fixes and updates for Polymer 2.0
+
 ## 0.2.2 - 2016-11-21 - Slots in autocompletions
 
 ### Changed
