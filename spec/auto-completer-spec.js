@@ -25,15 +25,11 @@ describe('Autocompleter', () => {
   beforeEach(() => {
     atom.project.setPaths([projectPath]);
 
-    waitsForPromise(() =>
-      atom.workspace.open(filePath)
-        .then(_editor => {
-          editor = _editor;
-          return atom.packages.activatePackage('polymer-ide');
-        })
-        .then(() => {
-          provider = PolymerIde.provideAutocompleter();
-        }));
+    waitsForPromise(async () => {
+      editor = await atom.workspace.open(filePath);
+      await atom.packages.activatePackage('polymer-ide');
+      provider = await PolymerIde.provideAutocompleter();
+    });
   });
 
   describe('getSuggestions', () => {
