@@ -1,16 +1,18 @@
 'use babel';
 
 import * as path from 'path';
+import * as os from 'os';
+import * as fs from 'fs-extra';
 import PolymerIde from '../lib/polymer-ide';
 
 describe('Autocompleter', () => {
   let provider;
   let editor;
-  let projectPath = path.resolve(__dirname, 'fixtures');
-  let filePath = path.resolve(projectPath, 'simple.html');
   let opts;
+  const fixtures = path.resolve(__dirname, 'fixtures');
 
   const getCompletions = () => {
+    editor.save();
     const cursor = editor.getLastCursor();
     const start = cursor.getBeginningOfCurrentWordBufferPosition();
     const end = cursor.getBufferPosition();
@@ -22,13 +24,15 @@ describe('Autocompleter', () => {
     });
   };
 
-  beforeEach(() => {
-    atom.project.setPaths([projectPath]);
+  beforeEach(async () => {
+    const tempDir = path.join(os.tmpdir(), `atom-polymer-ide-auto-completer-${Math.random()}`);
+    await fs.copy(fixtures, tempDir);
+    atom.project.setPaths([tempDir]);
 
     waitsForPromise(async () => {
-      editor = await atom.workspace.open(filePath);
+      editor = await atom.workspace.open(path.resolve(tempDir, 'simple.html'));
       await atom.packages.activatePackage('polymer-ide');
-      provider = await PolymerIde.provideAutocompleter();
+      provider = PolymerIde.provideAutocompleter();
     });
   });
 
@@ -67,7 +71,7 @@ describe('Autocompleter', () => {
     });
 
     it('should suggest matching elements', () => {
-      editor.setCursorBufferPosition([23, 0]);
+      editor.setCursorBufferPosition([29, 0]);
       editor.insertText('<te');
 
       waitsForPromise(() =>
@@ -86,7 +90,7 @@ describe('Autocompleter', () => {
 
     describe('attributes', () => {
       it('should suggest matching attributes', () => {
-        editor.setCursorBufferPosition([23, 0]);
+        editor.setCursorBufferPosition([29, 0]);
         editor.insertText('<test-element fo');
 
         waitsForPromise(() =>
@@ -102,7 +106,7 @@ describe('Autocompleter', () => {
       });
 
       it('should produce text suggestions for bools', () => {
-        editor.setCursorBufferPosition([23, 0]);
+        editor.setCursorBufferPosition([29, 0]);
         editor.insertText('<test-element ba');
 
         waitsForPromise(() =>
