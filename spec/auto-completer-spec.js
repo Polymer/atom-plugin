@@ -24,12 +24,12 @@ describe('Autocompleter', () => {
     });
   };
 
-  beforeEach(async () => {
-    const tempDir = path.join(os.tmpdir(), `atom-polymer-ide-auto-completer-${Math.random()}`);
-    await fs.copy(fixtures, tempDir);
-    atom.project.setPaths([tempDir]);
-
+  beforeEach(() => {
     waitsForPromise(async () => {
+      const tempDir = path.join(os.tmpdir(), `atom-polymer-ide-auto-completer-${Math.random()}`);
+      await fs.copy(fixtures, tempDir);
+      atom.project.setPaths([tempDir]);
+
       editor = await atom.workspace.open(path.resolve(tempDir, 'simple.html'));
       await atom.packages.activatePackage('polymer-ide');
       provider = PolymerIde.provideAutocompleter();
