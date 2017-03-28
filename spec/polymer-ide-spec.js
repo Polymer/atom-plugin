@@ -14,8 +14,9 @@ temp.track();
 
 describe('PolymerIde', () => {
   beforeEach(() => {
-    waitsForPromise(() =>
-      atom.packages.activatePackage('polymer-ide'));
+    waitsForPromise(async () => {
+      await atom.packages.activatePackage('polymer-ide');
+    });
   });
 
   describe('provideLinter', () => {
