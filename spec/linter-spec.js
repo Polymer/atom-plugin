@@ -2,7 +2,7 @@
 
 import * as path from 'path';
 import PolymerIde from '../lib/polymer-ide';
-import { Severity } from 'polymer-analyzer/lib/warning/warning';
+import { Severity } from 'polymer-analyzer/lib/model/model';
 
 describe('Linter', () => {
   let provider;
