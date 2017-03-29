@@ -44,48 +44,48 @@ describe('Autocompleter', () => {
           message: 'foo'
         });
 
-      waitsForPromise(() =>
-        getCompletions().then(result => {
-          expect(result.length).toBe(0);
-          expect(console.error).toHaveBeenCalledWith('foo');
-        }));
+      waitsForPromise(async () => {
+        var result = await getCompletions();
+        expect(result.length).toBe(0);
+        expect(console.error).toHaveBeenCalledWith('foo');
+      });
     });
 
     it('should return nothing if no editor service', () => {
       provider.editorService = null;
 
-      waitsForPromise(() =>
-        getCompletions().then(result => {
-          expect(result.length).toBe(0);
-        }));
+      waitsForPromise(async () => {
+        var result = await getCompletions();
+        expect(result.length).toBe(0);
+      });
     });
 
     it('should return nothing if editor service call fails', () => {
       spyOn(provider.editorService, 'getTypeaheadCompletionsAtPosition')
         .andReturn(false);
 
-      waitsForPromise(() =>
-        getCompletions().then(result => {
-          expect(result.length).toBe(0);
-        }));
+      waitsForPromise(async () => {
+        var result = await getCompletions();
+        expect(result.length).toBe(0);
+      });
     });
 
     it('should suggest matching elements', () => {
       editor.setCursorBufferPosition([29, 0]);
       editor.insertText('<te');
 
-      waitsForPromise(() =>
-        getCompletions().then(result => {
-          expect(result.length).toBe(1);
-          expect(result[0]).toEqual({
-            snippet: '<test-element $1></test-element>$0',
-            displayText: '<test-element>',
-            description: 'test description',
-            descriptionMarkdown: 'test description',
-            type: 'class',
-            replacementPrefix: '<te'
-          });
-        }));
+      waitsForPromise(async () => {
+        var result = await getCompletions();
+        expect(result.length).toBe(1);
+        expect(result[0]).toEqual({
+          snippet: '<test-element $1></test-element>$0',
+          displayText: '<test-element>',
+          description: 'test description',
+          descriptionMarkdown: 'test description',
+          type: 'class',
+          replacementPrefix: '<te'
+        });
+      });
     });
 
     describe('attributes', () => {
@@ -93,33 +93,33 @@ describe('Autocompleter', () => {
         editor.setCursorBufferPosition([29, 0]);
         editor.insertText('<test-element fo');
 
-        waitsForPromise(() =>
-          getCompletions().then(result => {
-            expect(result.length).toBe(1);
-            expect(result[0]).toEqual({
-              text: 'foo',
-              type: 'property',
-              description: 'foo description',
-              leftLabel: 'String'
-            });
-          }));
+        waitsForPromise(async () => {
+          var result = await getCompletions();
+          expect(result.length).toBe(1);
+          expect(result[0]).toEqual({
+            text: 'foo',
+            type: 'property',
+            description: 'foo description',
+            leftLabel: 'String'
+          });
+        });
       });
 
       it('should produce text suggestions for bools', () => {
         editor.setCursorBufferPosition([29, 0]);
         editor.insertText('<test-element ba');
 
-        waitsForPromise(() =>
-          getCompletions().then(result => {
-            expect(result.length).toBe(1);
-            expect(result[0]).toEqual({
-              displayText: 'bar',
-              snippet: 'bar=${1:Boolean}',
-              type: 'property',
-              description: 'bar description',
-              leftLabel: 'Boolean'
-            });
-          }));
+        waitsForPromise(async () => {
+          var result = await getCompletions();
+          expect(result.length).toBe(1);
+          expect(result[0]).toEqual({
+            displayText: 'bar',
+            snippet: 'bar=${1:Boolean}',
+            type: 'property',
+            description: 'bar description',
+            leftLabel: 'Boolean'
+          });
+        });
       });
 
       it('should display attribute inheritance');
