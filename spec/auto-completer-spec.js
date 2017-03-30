@@ -1,8 +1,10 @@
 'use babel';
 
 import * as path from 'path';
-import * as os from 'os';
 import * as fs from 'fs-extra';
+import * as temp from 'temp';
+
+temp.track();
 
 describe('Autocompleter', () => {
   let PolymerIde;
@@ -21,13 +23,17 @@ describe('Autocompleter', () => {
       bufferPosition: end,
       scopeDescriptor: cursor.getScopeDescriptor(),
       prefix: editor.getTextInRange([start, end])
+    }).catch(e => {
+      console.error(e);
+      throw e;
     });
   };
 
   beforeEach(() => {
     waitsForPromise(async () => {
-      const tempDir = path.join(os.tmpdir(), `atom-polymer-ide-auto-completer-${Math.random()}`);
+      const tempDir = temp.mkdirSync('polymer-atom-plugin');
       await fs.copy(fixtures, tempDir);
+
       atom.project.setPaths([tempDir]);
 
       editor = await atom.workspace.open(path.resolve(tempDir, 'simple.html'));
