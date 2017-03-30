@@ -3,9 +3,9 @@
 import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs-extra';
-import PolymerIde from '../lib/polymer-ide';
 
 describe('Autocompleter', () => {
+  let PolymerIde;
   let provider;
   let editor;
   let opts;
@@ -32,6 +32,8 @@ describe('Autocompleter', () => {
 
       editor = await atom.workspace.open(path.resolve(tempDir, 'simple.html'));
       await atom.packages.activatePackage('polymer-ide');
+
+      PolymerIde = atom.packages.getActivePackage('polymer-ide').mainModule;
       provider = PolymerIde.provideAutocompleter();
     });
   });
