@@ -70,14 +70,18 @@ class Autocompleter implements autocomplete.Provider {
         return suggestion;
       });
     } else if (completions.kind === 'attributes') {
-      return completions.attributes.map((attr) => {
+      const matchingAttributes = completions.attributes.filter(
+          e => e.name.startsWith(options.prefix));
+      return matchingAttributes.map((attr) => {
         let suggestion: autocomplete.Suggestion;
         if (attr.type === 'boolean') {
           suggestion = {text: attr.name};
         } else {
           suggestion = {
             displayText: attr.name,
-            snippet: `${attr.name}="\${1:${attr.type}}"`
+            snippet: `${attr.name}="\${1:${attr.type}}"`,
+            replacementPrefix: options.prefix,
+            type: 'class'
           };
         }
         suggestion.type = 'property';
