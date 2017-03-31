@@ -32,12 +32,11 @@ describe('Autocompleter', () => {
   beforeEach(() => {
     waitsForPromise(async () => {
       const tempDir = temp.mkdirSync('polymer-atom-plugin');
-      await fs.copy(fixtures, tempDir);
+      fs.copySync(fixtures, tempDir);
 
-      atom.project.setPaths([tempDir]);
-
-      editor = await atom.workspace.open(path.resolve(tempDir, 'simple.html'));
       await atom.packages.activatePackage('polymer-ide');
+      atom.project.setPaths([tempDir]);
+      editor = await atom.workspace.open(path.resolve(tempDir, 'simple.html'));
 
       PolymerIde = atom.packages.getActivePackage('polymer-ide').mainModule;
       provider = PolymerIde.provideAutocompleter();
