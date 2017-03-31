@@ -104,10 +104,12 @@ describe('Autocompleter', () => {
           var result = await getCompletions();
           expect(result.length).toBe(1);
           expect(result[0]).toEqual({
-            text: 'foo',
+            displayText: 'foo',
+            snippet: 'foo="${1:string}"',
+            replacementPrefix: 'fo',
             type: 'property',
             description: 'foo description',
-            leftLabel: 'String'
+            leftLabel: 'string'
           });
         });
       });
@@ -120,11 +122,10 @@ describe('Autocompleter', () => {
           var result = await getCompletions();
           expect(result.length).toBe(1);
           expect(result[0]).toEqual({
-            displayText: 'bar',
-            snippet: 'bar=${1:Boolean}',
+            text: 'bar',
             type: 'property',
             description: 'bar description',
-            leftLabel: 'Boolean'
+            leftLabel: 'boolean'
           });
         });
       });
