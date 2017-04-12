@@ -429,9 +429,9 @@ plylog@^0.5.0:
     "@types/winston" "^2.2.0"
     winston "^2.2.0"
 
-polymer-analyzer@2.0.0-alpha.34, polymer-analyzer@=2.0.0-alpha.34:
-  version "2.0.0-alpha.34"
-  resolved "https://registry.yarnpkg.com/polymer-analyzer/-/polymer-analyzer-2.0.0-alpha.34.tgz#6e95ea37247c036c53d1ef6c25f12a2763984eab"
+polymer-analyzer@2.0.0-alpha.35, polymer-analyzer@=2.0.0-alpha.35:
+  version "2.0.0-alpha.35"
+  resolved "https://registry.yarnpkg.com/polymer-analyzer/-/polymer-analyzer-2.0.0-alpha.35.tgz#01e24558b804d4c1b233a7c1affc667db2bb8d2c"
   dependencies:
     "@types/chai-subset" "^1.3.0"
     "@types/chalk" "^0.4.30"
@@ -458,9 +458,9 @@ polymer-analyzer@2.0.0-alpha.34, polymer-analyzer@=2.0.0-alpha.34:
     strip-indent "^2.0.0"
     typescript "^2.2.0"
 
-polymer-editor-service@=1.3.3:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/polymer-editor-service/-/polymer-editor-service-1.3.3.tgz#c1fb5e37ca85da538162f79f78a3b3bf9bacb444"
+polymer-editor-service@=1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/polymer-editor-service/-/polymer-editor-service-1.4.0.tgz#df6c8377ace07073dbb3221208672d92a341e3ce"
   dependencies:
     "@types/node" "^4.0.30"
     "@types/parse5" "^2.2.34"
@@ -469,17 +469,17 @@ polymer-editor-service@=1.3.3:
     dom5 "^2.0.1"
     parse5 "^2.2.3"
     plylog "^0.5.0"
-    polymer-analyzer "=2.0.0-alpha.34"
-    polymer-linter "=1.0.1"
+    polymer-analyzer "=2.0.0-alpha.35"
+    polymer-linter "=1.0.2"
     polymer-project-config "^2.0.1"
     split "^1.0.0"
     vscode-languageserver "^3.0.5"
     vscode-uri "^1.0.0"
     winston "^2.3.1"
 
-polymer-linter@=1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/polymer-linter/-/polymer-linter-1.0.1.tgz#486c65b9a2dcfc7347ccc5cb41d597d375105c94"
+polymer-linter@=1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/polymer-linter/-/polymer-linter-1.0.2.tgz#84a9642577628183bc591acff113ba48241a6fcb"
   dependencies:
     "@types/estree" "0.0.34"
     "@types/fast-levenshtein" "0.0.1"
@@ -489,7 +489,7 @@ polymer-linter@=1.0.1:
     estraverse "^4.2.0"
     fast-levenshtein "^2.0.6"
     parse5 "^2.2.1"
-    polymer-analyzer "2.0.0-alpha.34"
+    polymer-analyzer "2.0.0-alpha.35"
     strip-indent "^2.0.0"
 
 polymer-project-config@^2.0.1:

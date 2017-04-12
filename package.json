@@ -19,8 +19,8 @@
     "@types/node": "^6.0.41",
     "fs-extra": "^2.1.2",
     "marked": "^0.3.6",
-    "polymer-analyzer": "=2.0.0-alpha.34",
-    "polymer-editor-service": "=1.3.3"
+    "polymer-analyzer": "=2.0.0-alpha.35",
+    "polymer-editor-service": "=1.4.0"
   },
   "devDependencies": {
     "@types/atom": "0.0.32",
