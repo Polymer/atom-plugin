@@ -49,7 +49,6 @@ class Autocompleter implements autocomplete.Provider {
     const completions =
         await this.editorService.getTypeaheadCompletionsAtPosition(
             relativePath, position);
-    console.log(JSON.stringify(completions));
     if (!completions) {
       return [];
     }
