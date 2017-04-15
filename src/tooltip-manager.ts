@@ -36,12 +36,13 @@ class TooltipManager extends Disposable {
     this.editorService = editorService;
     this.subscriptions = new CompositeDisposable();
 
-    this.subscriptions.add(atom.workspace.observePanes((pane: AtomCore.IPane) => {
-      this.update();
-      this.subscriptions.add(pane.onDidChangeActiveItem(() => {
-        this.update();
-      }));
-    }));
+    this.subscriptions.add(
+        atom.workspace.observePanes((pane: AtomCore.IPane) => {
+          this.update();
+          this.subscriptions.add(pane.onDidChangeActiveItem(() => {
+            this.update();
+          }));
+        }));
   };
 
   private update() {
@@ -71,22 +72,27 @@ class TooltipManager extends Disposable {
       window.clearTimeout(timer);
       if (this.tooltipMarker
           // You are going too far up
-          && (this.oldCursorsPosition.y - event.y  > 25
-          // You are going too far left
-          || this.oldCursorsPosition.x - event.x > 25
-          // You are going too far right
-          || (this.oldCursorsPosition.x - event.x < -40
-              // but you are not going down inside the tooltip.
-              && this.oldCursorsPosition.y - event.y > -40))
-        ) {
+          &&
+          (this.oldCursorsPosition.y - event.y > 25
+           // You are going too far left
+           ||
+           this.oldCursorsPosition.x - event.x > 25
+           // You are going too far right
+           ||
+           (this.oldCursorsPosition.x - event.x < -40
+            // but you are not going down inside the tooltip.
+            &&
+            this.oldCursorsPosition.y - event.y > -40))) {
         this.removeTooltip();
       }
       if (!this.tooltipMarker) {
-        timer = window.setTimeout(() => this.calculatePositions(event, textEditorElement), 100);
+        timer = window.setTimeout(
+            () => this.calculatePositions(event, textEditorElement), 100);
       }
     };
     textEditorElement.addEventListener('mousemove', mouseMoveListener);
-    this.removeMouseMoveListener = () => textEditorElement.removeEventListener('mousemove', mouseMoveListener);
+    this.removeMouseMoveListener = () =>
+        textEditorElement.removeEventListener('mousemove', mouseMoveListener);
   };
 
   private calculatePositions(event: MouseEvent, textEditorElement: any) {
@@ -94,15 +100,24 @@ class TooltipManager extends Disposable {
     if (!textEditorElement || !textEditorElement.component) {
       return;
     }
-    const reportedCursorPosition = textEditorElement.component.screenPositionForMouseEvent(event);
-    const currentCursorPixelPosition = textEditorElement.component.pixelPositionForMouseEvent(event);
-    const expectedPixelPosition = textEditorElement.pixelPositionForScreenPosition(reportedCursorPosition);
+    const reportedCursorPosition =
+        textEditorElement.component.screenPositionForMouseEvent(event);
+    const currentCursorPixelPosition =
+        textEditorElement.component.pixelPositionForMouseEvent(event);
+    const expectedPixelPosition =
+        textEditorElement.pixelPositionForScreenPosition(
+            reportedCursorPosition);
 
-    const nearColumn = Math.abs(currentCursorPixelPosition.left - expectedPixelPosition.left) < 20;
-    const nearRow = Math.abs(currentCursorPixelPosition.top - expectedPixelPosition.top) < 20;
+    const nearColumn =
+        Math.abs(currentCursorPixelPosition.left - expectedPixelPosition.left) <
+        20;
+    const nearRow =
+        Math.abs(currentCursorPixelPosition.top - expectedPixelPosition.top) <
+        20;
 
     if (nearColumn && nearRow) {
-      this.updateTooltip(this.textEditor.bufferPositionForScreenPosition(reportedCursorPosition));
+      this.updateTooltip(this.textEditor.bufferPositionForScreenPosition(
+          reportedCursorPosition));
       this.oldCursorsPosition = {x: event.x, y: event.y};
     }
   }
@@ -114,10 +129,11 @@ class TooltipManager extends Disposable {
       return;
     }
     const relativePath: string =
-      atom.project.relativizePath(this.textEditor.getPath())[1];
+        atom.project.relativizePath(this.textEditor.getPath())[1];
     let documentation: string;
     try {
-      documentation = await this.editorService.getDocumentationAtPosition(relativePath, {line: point.row, column: point.column});
+      documentation = await this.editorService.getDocumentationAtPosition(
+          relativePath, {line: point.row, column: point.column});
       if (!documentation) {
         return;
       }
@@ -128,11 +144,9 @@ class TooltipManager extends Disposable {
 
     const marker = this.textEditor.markBufferRange([point, point]);
     const div = this.getOrCreateTooltipElement();
-    this.documentationElement.innerHTML = marked.parse(documentation, {sanitize: true});
-    this.textEditor.decorateMarker(marker, {
-      type: 'overlay',
-      item: div
-    });
+    this.documentationElement.innerHTML =
+        marked.parse(documentation, {sanitize: true});
+    this.textEditor.decorateMarker(marker, {type: 'overlay', item: div});
     this.tooltipMarker = marker;
   };
 
