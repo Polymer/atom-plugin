@@ -27,6 +27,9 @@ describe('Autocompleter', () => {
   let opts;
   const fixtures = path.resolve(__dirname, 'fixtures');
 
+  const LINE_AFTER_DOM_MODULE = 33;
+  const LAST_LINE_IN_TEMPLATE = 12;
+
   const getCompletions = () => {
     editor.save();
     const cursor = editor.getLastCursor();
@@ -92,7 +95,7 @@ describe('Autocompleter', () => {
     });
 
     it('should suggest matching elements', () => {
-      editor.setCursorBufferPosition([29, 0]);
+      editor.setCursorBufferPosition([LINE_AFTER_DOM_MODULE, 0]);
       editor.insertText('<te');
 
       waitsForPromise(async () => {
@@ -111,7 +114,7 @@ describe('Autocompleter', () => {
 
     describe('attributes', () => {
       it('should suggest matching attributes', () => {
-        editor.setCursorBufferPosition([29, 0]);
+        editor.setCursorBufferPosition([LINE_AFTER_DOM_MODULE, 0]);
         editor.insertText('<test-element fo');
 
         waitsForPromise(async () => {
@@ -129,7 +132,7 @@ describe('Autocompleter', () => {
       });
 
       it('should produce text suggestions for bools', () => {
-        editor.setCursorBufferPosition([29, 0]);
+        editor.setCursorBufferPosition([LINE_AFTER_DOM_MODULE, 0]);
         editor.insertText('<test-element ba');
 
         waitsForPromise(async () => {
@@ -145,6 +148,58 @@ describe('Autocompleter', () => {
       });
 
       it('should display attribute inheritance');
+
+      describe('values', () => {
+        it('should autocomplete non-notifying properties', () => {
+          editor.setCursorBufferPosition([LAST_LINE_IN_TEMPLATE, 0]);
+          editor.insertText('<child-element non-notifying-property="');
+          const position = editor.getLastCursor().getBufferPosition();
+          editor.insertText('"></child-element>');
+          editor.setCursorBufferPosition(position);
+
+          waitsForPromise(async () => {
+            var result = await getCompletions();
+            expect(result.length).toBe(2);
+            expect(result[0]).toEqual({
+              text: '[[foo]]',
+              type: 'value',
+              description: 'foo description',
+              leftLabel: 'string'
+            });
+            expect(result[1]).toEqual({
+              text: '[[bar]]',
+              type: 'value',
+              description: 'bar description',
+              leftLabel: 'boolean'
+            });
+          });
+        });
+
+        it('should autocomplete notifying properties', () => {
+          editor.setCursorBufferPosition([LAST_LINE_IN_TEMPLATE, 0]);
+          editor.insertText('<child-element local-property="');
+          const position = editor.getLastCursor().getBufferPosition();
+          editor.insertText('"></child-element>');
+          editor.setCursorBufferPosition(position);
+
+          waitsForPromise(async () => {
+            var result = await getCompletions();
+            expect(result.length).toBe(2);
+            expect(result[0]).toEqual({
+              text: '{{foo}}',
+              type: 'value',
+              description: 'foo description',
+              leftLabel: 'string'
+            });
+            expect(result[1]).toEqual({
+              text: '{{bar}}',
+              type: 'value',
+              description: 'bar description',
+              leftLabel: 'boolean'
+            });
+          });
+        });
+      })
     });
   });
 });

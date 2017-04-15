@@ -1,12 +1,16 @@
 <html>
 <head>
   <link rel="import" href="./does-not-exist.html">
+  <link rel="import" href="./child-element.html">
 </head>
 <body>
   <!--
   test description
   -->
   <dom-module id="test-element">
+    <template>
+      <child-element></child-element>
+    </template>
     <script>
     Polymer({
       is: 'test-element',
