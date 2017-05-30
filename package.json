@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "format": "find src test | grep '\\.js$\\|\\.ts$' | xargs clang-format --style=file -i",
+    "format": "find src spec | grep '\\.js$\\|\\.ts$' | xargs clang-format --style=file -i",
     "preversion": "tsc && git add lib/ -f",
     "postversion": "git rm -r lib/ && git commit -m \"Automatic removal of lib folder after release commit.\" && tsc",
     "test": "tsc && atom --test spec"
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@types/atom": "0.0.32",
     "@types/marked": "0.0.28",
+    "clang-format": "=1.0.52",
     "temp": "^0.8.3",
     "tslint": "^3.15.1",
     "typescript": "^2.0.3"
