@@ -72,17 +72,13 @@ class TooltipManager extends Disposable {
       window.clearTimeout(timer);
       if (this.tooltipMarker
           // You are going too far up
-          &&
-          (this.oldCursorsPosition.y - event.y > 25
-           // You are going too far left
-           ||
-           this.oldCursorsPosition.x - event.x > 25
-           // You are going too far right
-           ||
-           (this.oldCursorsPosition.x - event.x < -40
-            // but you are not going down inside the tooltip.
-            &&
-            this.oldCursorsPosition.y - event.y > -40))) {
+          && (this.oldCursorsPosition.y - event.y > 25
+              // You are going too far left
+              || this.oldCursorsPosition.x - event.x > 25
+              // You are going too far right
+              || (this.oldCursorsPosition.x - event.x < -40
+                  // but you are not going down inside the tooltip.
+                  && this.oldCursorsPosition.y - event.y > -40))) {
         this.removeTooltip();
       }
       if (!this.tooltipMarker) {

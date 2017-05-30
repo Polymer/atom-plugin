@@ -87,30 +87,30 @@ class Autocompleter implements autocomplete.Provider {
     }
 
     if (completions.kind === 'attributes') {
-      return completions.attributes.filter(
-          e => e.name.startsWith(options.prefix))
+      return completions.attributes
+          .filter(e => e.name.startsWith(options.prefix))
           .map((attr) => {
-        let suggestion: autocomplete.Suggestion;
-        if (attr.type === 'boolean') {
-          suggestion = {text: attr.name};
-        } else {
-          suggestion = {
-            displayText: attr.name,
-            snippet: `${attr.name}="\${1:${attr.type}}"`,
-            replacementPrefix: options.prefix,
-            type: 'class'
-          };
-        }
-        suggestion.type = 'property';
-        suggestion.description = attr.description;
-        if (attr.inheritedFrom) {
-          suggestion.rightLabel = `⊃ ${attr.inheritedFrom}`;
-        }
-        if (attr.type) {
-          suggestion.leftLabel = attr.type;
-        }
-        return suggestion;
-      });
+            let suggestion: autocomplete.Suggestion;
+            if (attr.type === 'boolean') {
+              suggestion = {text: attr.name};
+            } else {
+              suggestion = {
+                displayText: attr.name,
+                snippet: `${attr.name}="\${1:${attr.type}}"`,
+                replacementPrefix: options.prefix,
+                type: 'class'
+              };
+            }
+            suggestion.type = 'property';
+            suggestion.description = attr.description;
+            if (attr.inheritedFrom) {
+              suggestion.rightLabel = `⊃ ${attr.inheritedFrom}`;
+            }
+            if (attr.type) {
+              suggestion.leftLabel = attr.type;
+            }
+            return suggestion;
+          });
     } /* else if (completions.kind === 'resource-paths') {
       return completions.paths.map((path) => {
         const suggestion: autocomplete.TextSuggestion = {
