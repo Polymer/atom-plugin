@@ -31,15 +31,18 @@ describe('Autocompleter', () => {
   const LAST_LINE_IN_TEMPLATE = 12;
 
   const getCompletions = () => {
-    editor.save();
-    const cursor = editor.getLastCursor();
-    const start = cursor.getBeginningOfCurrentWordBufferPosition();
-    const end = cursor.getBufferPosition();
-    return provider.getSuggestions({
-      editor: editor,
-      bufferPosition: end,
-      scopeDescriptor: cursor.getScopeDescriptor(),
-      prefix: editor.getTextInRange([start, end])
+    return Promise.resolve().then(() => {
+      return editor.save();
+    }).then(() => {
+      const cursor = editor.getLastCursor();
+      const start = cursor.getBeginningOfCurrentWordBufferPosition();
+      const end = cursor.getBufferPosition();
+      return provider.getSuggestions({
+        editor: editor,
+        bufferPosition: end,
+        scopeDescriptor: cursor.getScopeDescriptor(),
+        prefix: editor.getTextInRange([start, end])
+      });
     }).catch(e => {
       console.error(e);
       throw e;

@@ -8,11 +8,8 @@ cache:
     - node_modules
 
 script:
+  - sudo apt-get install libstdc++6
   - npm run build && rm -r node_modules
   - curl -s -O https://raw.githubusercontent.com/atom/ci/master/build-package.sh
   - chmod u+x build-package.sh
   - ./build-package.sh
-
-env:
-  matrix:
-    - ATOM_CHANNEL=beta
