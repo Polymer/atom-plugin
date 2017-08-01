@@ -1,8 +1,26 @@
-## Unreleased
+<!-- ## Unreleased -->
 
 <!-- New PRs should document their user-visible changes here, in the Unreleased section. -->
-### Added
+
+## 0.4.0 - 2017-08-01 - New Annotations, Improved Inheritance
+
 * Added autcompletion for attribute values based on property information.
+* Updated to the latest version of the analyzer, includes many bug fixes and improvements, including:
+  * Added support for recognizing instance properties in constructors.
+    * The properties must be annotated with a jsdoc tag to be recognized.
+    * Specific handling of the following tags is supported:
+      * `@public`, `@private`, `@protected`, `@type`, and `@const`
+      * The description can be combined with a visibility or type annotation. e.g.
+        * `/** @type {number} How many bacon wrapped waffles to eat. */`
+  * Added support for new JSDoc tags: @customElement, @polymer, @mixinFunction, @appliesMixin
+  * Fixed a bug where we were too aggressive in associating HTML comments with
+    nodes, such that any comment that came before a `<script>` tag e.g. could
+    become part of the description of the element defined therein.
+  * Simplify rules for infering privacy. Now all features: classes, elements, properties, methods, etc have one set of rules for inferring privacy. Explicit js doc annotations are respected, otherwise `__foo` and `foo_` are private, `_foo` is protected, and `foo` is public.
+  * Mix mixins into mixins.
+  * Improved modeling of inheritance:
+    * overriding inherited members now works correctly
+    * overriding a private member produces a Warning
 
 ## 0.3.0 - 2017-03-20 - Linter and Polymer 2.0
 

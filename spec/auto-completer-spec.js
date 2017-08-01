@@ -161,20 +161,17 @@ describe('Autocompleter', () => {
           editor.setCursorBufferPosition(position);
 
           waitsForPromise(async () => {
-            var result = await getCompletions();
-            expect(result.length).toBe(2);
-            expect(result[0]).toEqual({
-              text: '[[foo]]',
-              type: 'value',
-              description: 'foo description',
-              leftLabel: 'string'
-            });
-            expect(result[1]).toEqual({
+            expect(await getCompletions()).toEqual([{
               text: '[[bar]]',
               type: 'value',
               description: 'bar description',
               leftLabel: 'boolean'
-            });
+            }, {
+              text: '[[foo]]',
+              type: 'value',
+              description: 'foo description',
+              leftLabel: 'string'
+            },]);
           });
         });
 
@@ -186,20 +183,17 @@ describe('Autocompleter', () => {
           editor.setCursorBufferPosition(position);
 
           waitsForPromise(async () => {
-            var result = await getCompletions();
-            expect(result.length).toBe(2);
-            expect(result[0]).toEqual({
-              text: '{{foo}}',
-              type: 'value',
-              description: 'foo description',
-              leftLabel: 'string'
-            });
-            expect(result[1]).toEqual({
+            expect(await getCompletions()).toEqual([{
               text: '{{bar}}',
               type: 'value',
               description: 'bar description',
               leftLabel: 'boolean'
-            });
+            }, {
+              text: '{{foo}}',
+              type: 'value',
+              description: 'foo description',
+              leftLabel: 'string'
+            },]);
           });
         });
       })
