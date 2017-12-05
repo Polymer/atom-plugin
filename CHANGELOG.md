@@ -1,5 +1,10 @@
-<!-- ## Unreleased -->
+## Unreleased
 
+* **Important Note:** this plugin is best used with the `atom-ide-ui` plugin. It contains the UI for most of these features.
+* Added support for jump to definition of elements and attributes
+* Added support for automatic fixes of warnings via atom-ide-ui's Code Actions.
+* Swapped out our custom implementation for one built on the Language Server Protocol standard. Uses the atom-languageclient and atom-ide-ui packages to communicate to the Polymer Editor Server, giving us more functionality with less code, and making it much easier for the Atom plugin to stay up to date!
+* Updated the editor server for a bunch of fun new bug fixes and lint passes.
 <!-- New PRs should document their user-visible changes here, in the Unreleased section. -->
 
 ## 0.4.0 - 2017-08-01 - New Annotations, Improved Inheritance

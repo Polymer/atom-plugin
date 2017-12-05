@@ -7,39 +7,60 @@
   "repository": "https://github.com/polymer/atom-plugin",
   "license": "BSD-3-Clause",
   "engines": {
-    "atom": ">=1.0.0 <2.0.0"
+    "atom": ">=1.21.0 <2.0.0"
   },
   "scripts": {
-    "build": "tsc",
-    "format": "find src spec | grep '\\.js$\\|\\.ts$' | xargs clang-format --style=file -i",
-    "preversion": "tsc && git add lib/ -f",
-    "postversion": "git rm -r lib/ && git commit -m \"Automatic removal of lib folder after release commit.\" && tsc",
-    "test": "tsc && atom --test spec"
+    "format": "ls lib/*.js | xargs clang-format --style=file -i"
   },
+  "enhancedScopes": [
+    "source.html",
+    "source.html.basic",
+    "source.js",
+    "source.css"
+  ],
   "dependencies": {
-    "@types/node": "^6.0.41",
-    "fs-extra": "^2.1.2",
-    "marked": "^0.3.6",
-    "polymer-analyzer": "^2.0.0",
-    "polymer-editor-service": "^1.5.0"
+    "atom-languageclient": "^0.7.0",
+    "polymer-editor-service": ">1.5 <3.0"
   },
   "devDependencies": {
-    "@types/atom": "0.0.32",
-    "@types/marked": "0.0.28",
-    "clang-format": "=1.0.52",
-    "temp": "^0.8.3",
-    "tslint": "^3.15.1",
-    "typescript": "^2.0.3"
+    "clang-format": "=1.1.0"
   },
-  "providedServices": {
-    "linter": {
+  "consumedServices": {
+    "linter-indie": {
       "versions": {
-        "1.0.0": "provideLinter"
+        "2.0.0": "consumeLinterV2"
       }
     },
+    "datatip": {
+      "versions": {
+        "0.1.0": "consumeDatatip"
+      }
+    }
+  },
+  "providedServices": {
     "autocomplete.provider": {
       "versions": {
-        "2.0.0": "provideAutocompleter"
+        "2.0.0": "provideAutocomplete"
+      }
+    },
+    "definitions": {
+      "versions": {
+        "0.1.0": "provideDefinitions"
+      }
+    },
+    "code-actions": {
+      "versions": {
+        "0.1.0": "provideCodeActions"
+      }
+    },
+    "find-references": {
+      "versions": {
+        "0.1.0": "provideReferences"
+      }
+    },
+    "outline-view": {
+      "versions": {
+        "0.1.0": "provideOutlines"
       }
     }
   }
